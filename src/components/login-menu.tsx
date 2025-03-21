@@ -18,32 +18,34 @@ import {
   LogOut,
   MoreVertical,
 } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import UserTag from './user-tag'
+import { MouseEvent, useState } from 'react'
 
-const NavbarRight = () => {
-  const isLoggedIn = false
+const LoginMenu = () => {
+  const [isLoggedIn, setLoggedIn] = useState(false)
+
   const user = {
     logo: '/logo.png',
     username: 'sn0wvy',
     email: 'admin@spaceflow.me',
   }
 
+  const handleLogin = (e: MouseEvent<HTMLDivElement>): void => {
+    e.preventDefault()
+    setLoggedIn(true)
+  }
+  const handleLogout = (e: MouseEvent<HTMLDivElement>): void => {
+    e.preventDefault()
+    setLoggedIn(false)
+  }
+
   return (
-    <div className='max-w-48 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer'>
+    <div className='max-w-48 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-all duration-300'>
       {isLoggedIn ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className='flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground'>
-              <Avatar className='h-8 w-8 roudned-lg'>
-                <AvatarImage src={user.logo} />
-                <AvatarFallback>FB</AvatarFallback>
-              </Avatar>
-              <div className='grid flex-1 text-left text-sm leading-tight'>
-                <span className='truncate font-semibold'>{user.username}</span>
-                <span className='truncate text-xs text-muted-foreground'>
-                  {user.email}
-                </span>
-              </div>
+              <UserTag {...user} />
               <MoreVertical className='ml-auto size-4' />
             </div>
           </DropdownMenuTrigger>
@@ -55,18 +57,7 @@ const NavbarRight = () => {
           >
             <DropdownMenuLabel className='p-0 font-normal'>
               <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
-                <Avatar className='h-8 w-8 roudned-lg'>
-                  <AvatarImage src='/logo.png' />
-                  <AvatarFallback>FB</AvatarFallback>
-                </Avatar>
-                <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>
-                    {user.username}
-                  </span>
-                  <span className='truncate text-xs text-muted-foreground'>
-                    {user.email}
-                  </span>
-                </div>
+                <UserTag {...user} />
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -84,7 +75,7 @@ const NavbarRight = () => {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
                 <LogOut />
                 Log out
               </DropdownMenuItem>
@@ -92,10 +83,13 @@ const NavbarRight = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <div className='flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground'>
-          <CircleUser className='h-6 w-6' />
+        <div
+          className='flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground'
+          onClick={handleLogin}
+        >
+          <CircleUser className='h-5 w-5' />
           <div className='grid flex-1 text-left text-sm leading-tight'>
-            <span className='truncate font-semibold'>Sign in</span>
+            <span className='truncate text-sm'>Sign in</span>
           </div>
         </div>
       )}
@@ -103,4 +97,4 @@ const NavbarRight = () => {
   )
 }
 
-export default NavbarRight
+export default LoginMenu
