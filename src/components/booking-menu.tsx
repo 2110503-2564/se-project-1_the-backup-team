@@ -15,9 +15,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Room, Space } from '@/interfaces/space.interface'
-import { useState } from 'react'
-import { CalendarFold, CalendarIcon, DoorClosed } from 'lucide-react'
+import { Room, Space, TimeSlots } from '@/interfaces/space.interface'
+import { MouseEvent, useEffect, useState } from 'react'
+import { CalendarIcon, Clock, Coffee } from 'lucide-react'
 import {
   Popover,
   PopoverContent,
@@ -26,10 +26,39 @@ import {
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
+import { getReservableTime } from '@/repo/spaces'
+import { useBooking } from '@/context/booking-context'
 
 const BookingMenu = ({ space }: { space: Space }) => {
-  const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(undefined)
+  const { selectedRoom, setSelectedRoom } = useBooking()
+
   const [date, setDate] = useState<Date>()
+  const [time, setTime] = useState('')
+  const [timeslots, setTimeslots] = useState<TimeSlots[]>([])
+
+  useEffect(() => {
+    const fetchTimeSlots = async () => {
+      if (selectedRoom && date) {
+        const ts = await getReservableTime(
+          space._id,
+          selectedRoom?._id,
+          date?.toString(),
+        )
+        setTimeslots(ts)
+      }
+    }
+    fetchTimeSlots()
+    return () => {
+      setTimeslots([])
+      setTime('')
+    }
+  }, [selectedRoom, date, space._id])
+
+  const handleSubmit = (e: MouseEvent) => {
+    e.preventDefault()
+    console.log('SUBMIT')
+  }
+
   return (
     <div>
       <Card className='sticky top-20'>
@@ -63,16 +92,24 @@ const BookingMenu = ({ space }: { space: Space }) => {
           </div>
 
           <div className='w-full grid grid-cols-2 gap-2'>
-            <div className='rounded-md basis-1/2'>
+            <div className='col-span-2'>
               <Select
                 value={selectedRoom?._id}
                 onValueChange={(val) => {
                   const room = space.rooms.find((room) => room._id === val)
                   setSelectedRoom(room)
                 }}
+                required
               >
-                <SelectTrigger className='w-full'>
-                  <SelectValue placeholder='Select a room' />
+                <SelectTrigger className='w-full cursor-pointer'>
+                  <SelectValue
+                    placeholder={
+                      <div className='w-full flex items-center gap-2'>
+                        <Coffee />
+                        Select a room
+                      </div>
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {space.rooms.map((room) => (
@@ -89,7 +126,7 @@ const BookingMenu = ({ space }: { space: Space }) => {
                   <Button
                     variant={'outline'}
                     className={cn(
-                      'w-full justify-start text-left font-normal',
+                      'w-full justify-start text-left font-normal cursor-pointer',
                       !date && 'text-muted-foreground',
                     )}
                   >
@@ -103,10 +140,44 @@ const BookingMenu = ({ space }: { space: Space }) => {
                   mode='single'
                   selected={date}
                   onSelect={setDate}
+                  fromDate={new Date()}
                   initialFocus
+                  required
                 />
               </PopoverContent>
             </Popover>
+            <div className='rounded-md basis-1/2'>
+              <Select
+                value={time}
+                onValueChange={(val) => setTime(val)}
+                required
+              >
+                <SelectTrigger
+                  className='w-full cursor-pointer'
+                  disabled={timeslots.length === 0}
+                >
+                  <SelectValue
+                    placeholder={
+                      <div className='w-full flex items-center gap-2'>
+                        <Clock />
+                        Pick a time
+                      </div>
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {timeslots.map((t) => (
+                    <SelectItem
+                      key={t.time}
+                      value={t.time}
+                      disabled={t.available}
+                    >
+                      {t.time}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
         <CardFooter>
@@ -117,7 +188,16 @@ const BookingMenu = ({ space }: { space: Space }) => {
             >
               Contact Host
             </Button>
-            <Button className='basis-1/2'>Reserve</Button>
+            <Button
+              className='basis-1/2 cursor-pointer'
+              type='submit'
+              onClick={handleSubmit}
+              disabled={
+                !date || date.toString().trim() === '' || !selectedRoom || !time
+              }
+            >
+              Reserve
+            </Button>
           </div>
         </CardFooter>
       </Card>
