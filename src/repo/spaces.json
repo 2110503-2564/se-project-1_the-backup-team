@@ -15,11 +15,7 @@
         "roomNumber": "101",
         "price": 450,
         "capacity": 4,
-        "facilities": [
-          "Whiteboard",
-          "TV Screen",
-          "WiFi"
-        ]
+        "facilities": ["Whiteboard", "TV Screen", "WiFi"]
       },
       {
         "_id": "6570f10a5df9e76553e6a102",
@@ -64,11 +60,7 @@
         "roomNumber": "201",
         "price": 450,
         "capacity": 6,
-        "facilities": [
-          "Smart TV",
-          "WiFi",
-          "Standing Desk"
-        ]
+        "facilities": ["Smart TV", "WiFi", "Standing Desk"]
       }
     ]
   },
@@ -125,11 +117,7 @@
         "roomNumber": "401",
         "price": 450,
         "capacity": 4,
-        "facilities": [
-          "Smart Board",
-          "WiFi",
-          "Phone Booth"
-        ]
+        "facilities": ["Smart Board", "WiFi", "Phone Booth"]
       },
       {
         "_id": "6570f10a5df9e76553e6a108",
@@ -161,11 +149,7 @@
         "roomNumber": "501",
         "price": 450,
         "capacity": 3,
-        "facilities": [
-          "Monitor",
-          "WiFi",
-          "Printer Access"
-        ]
+        "facilities": ["Monitor", "WiFi", "Printer Access"]
       },
       {
         "_id": "6570f10a5df9e76553e6a110",
@@ -197,24 +181,14 @@
         "roomNumber": "601",
         "price": 450,
         "capacity": 6,
-        "facilities": [
-          "Whiteboard",
-          "LCD Screen",
-          "WiFi",
-          "Bluetooth Speaker"
-        ]
+        "facilities": ["Whiteboard", "LCD Screen", "WiFi", "Bluetooth Speaker"]
       },
       {
         "_id": "6570f10a5df9e76553e6a112",
         "roomNumber": "602",
         "price": 450,
         "capacity": 10,
-        "facilities": [
-          "Projector",
-          "Surround Sound",
-          "WiFi",
-          "Refreshments"
-        ]
+        "facilities": ["Projector", "Surround Sound", "WiFi", "Refreshments"]
       }
     ]
   },
@@ -246,12 +220,7 @@
         "roomNumber": "702",
         "price": 450,
         "capacity": 15,
-        "facilities": [
-          "Projector",
-          "Sound System",
-          "WiFi",
-          "Garden View"
-        ]
+        "facilities": ["Projector", "Sound System", "WiFi", "Garden View"]
       }
     ]
   },
@@ -271,11 +240,7 @@
         "roomNumber": "801",
         "price": 450,
         "capacity": 4,
-        "facilities": [
-          "Smart TV",
-          "WiFi",
-          "Espresso Machine"
-        ]
+        "facilities": ["Smart TV", "WiFi", "Espresso Machine"]
       },
       {
         "_id": "6570f10a5df9e76553e6a116",
@@ -307,12 +272,7 @@
         "roomNumber": "901",
         "price": 450,
         "capacity": 5,
-        "facilities": [
-          "Whiteboard",
-          "Monitor",
-          "WiFi",
-          "Printer"
-        ]
+        "facilities": ["Whiteboard", "Monitor", "WiFi", "Printer"]
       },
       {
         "_id": "6570f10a5df9e76553e6a118",
@@ -344,24 +304,14 @@
         "roomNumber": "1001",
         "price": 450,
         "capacity": 7,
-        "facilities": [
-          "Writable Walls",
-          "TV Screen",
-          "WiFi",
-          "Coffee Bar"
-        ]
+        "facilities": ["Writable Walls", "TV Screen", "WiFi", "Coffee Bar"]
       },
       {
         "_id": "6570f10a5df9e76553e6a120",
         "roomNumber": "1002",
         "price": 450,
         "capacity": 14,
-        "facilities": [
-          "Projector",
-          "Audio System",
-          "WiFi",
-          "Terrace Access"
-        ]
+        "facilities": ["Projector", "Audio System", "WiFi", "Terrace Access"]
       }
     ]
   },
@@ -381,11 +331,7 @@
         "roomNumber": "1101",
         "price": 450,
         "capacity": 6,
-        "facilities": [
-          "Smart TV",
-          "WiFi",
-          "Wireless Charging Stations"
-        ]
+        "facilities": ["Smart TV", "WiFi", "Wireless Charging Stations"]
       },
       {
         "_id": "6570f10a5df9e76553e6a122",
@@ -417,11 +363,7 @@
         "roomNumber": "1201",
         "price": 450,
         "capacity": 5,
-        "facilities": [
-          "Digital Whiteboard",
-          "WiFi",
-          "Standing Desks"
-        ]
+        "facilities": ["Digital Whiteboard", "WiFi", "Standing Desks"]
       },
       {
         "_id": "6570f10a5df9e76553e6a124",
@@ -453,24 +395,14 @@
         "roomNumber": "1301",
         "price": 450,
         "capacity": 8,
-        "facilities": [
-          "TV Screen",
-          "WiFi",
-          "Whiteboard Wall",
-          "Green Corner"
-        ]
+        "facilities": ["TV Screen", "WiFi", "Whiteboard Wall", "Green Corner"]
       },
       {
         "_id": "6570f10a5df9e76553e6a126",
         "roomNumber": "1302",
         "price": 450,
         "capacity": 14,
-        "facilities": [
-          "Projector",
-          "Conference Phone",
-          "WiFi",
-          "Lounge Area"
-        ]
+        "facilities": ["Projector", "Conference Phone", "WiFi", "Lounge Area"]
       }
     ]
   },
@@ -490,11 +422,7 @@
         "roomNumber": "1401",
         "price": 450,
         "capacity": 6,
-        "facilities": [
-          "Interactive Display",
-          "WiFi",
-          "Pod Seating"
-        ]
+        "facilities": ["Interactive Display", "WiFi", "Pod Seating"]
       },
       {
         "_id": "6570f10a5df9e76553e6a128",
@@ -526,12 +454,7 @@
         "roomNumber": "1501",
         "price": 450,
         "capacity": 5,
-        "facilities": [
-          "Whiteboard",
-          "TV Screen",
-          "WiFi",
-          "River View"
-        ]
+        "facilities": ["Whiteboard", "TV Screen", "WiFi", "River View"]
       },
       {
         "_id": "6570f10a5df9e76553e6a130",
@@ -563,11 +486,7 @@
         "roomNumber": "1601",
         "price": 450,
         "capacity": 7,
-        "facilities": [
-          "Smart TV",
-          "WiFi",
-          "Modular Furniture"
-        ]
+        "facilities": ["Smart TV", "WiFi", "Modular Furniture"]
       },
       {
         "_id": "6570f10a5df9e76553e6a132",
@@ -599,11 +518,7 @@
         "roomNumber": "1701",
         "price": 450,
         "capacity": 6,
-        "facilities": [
-          "Digital Display",
-          "WiFi",
-          "Quiet Zone"
-        ]
+        "facilities": ["Digital Display", "WiFi", "Quiet Zone"]
       },
       {
         "_id": "6570f10a5df9e76553e6a134",
@@ -635,11 +550,7 @@
         "roomNumber": "1801",
         "price": 450,
         "capacity": 8,
-        "facilities": [
-          "Interactive Board",
-          "WiFi",
-          "Wellness Corner"
-        ]
+        "facilities": ["Interactive Board", "WiFi", "Wellness Corner"]
       },
       {
         "_id": "6570f10a5df9e76553e6a136",
@@ -671,12 +582,7 @@
         "roomNumber": "1901",
         "price": 450,
         "capacity": 5,
-        "facilities": [
-          "Whiteboard",
-          "TV Monitor",
-          "WiFi",
-          "Ergonomic Seating"
-        ]
+        "facilities": ["Whiteboard", "TV Monitor", "WiFi", "Ergonomic Seating"]
       },
       {
         "_id": "6570f10a5df9e76553e6a138",
@@ -708,11 +614,7 @@
         "roomNumber": "2001",
         "price": 450,
         "capacity": 4,
-        "facilities": [
-          "Smart Display",
-          "WiFi",
-          "Wireless Charging"
-        ]
+        "facilities": ["Smart Display", "WiFi", "Wireless Charging"]
       },
       {
         "_id": "6570f10a5df9e76553e6a140",
