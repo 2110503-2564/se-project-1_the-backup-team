@@ -106,3 +106,66 @@ export const searchSpaces = (
     }, 300)
   })
 }
+
+export const getReservableTime = (
+  spaceId: string,
+  roomId: string,
+  date: string,
+) => {
+  return new Promise<{ time: string; available: boolean }[]>((resolve) => {
+    setTimeout(() => {
+      const space = spaces.find((space) => space._id === spaceId)
+
+      if (!roomId) {
+        resolve([])
+        return
+      }
+
+      if (!date || date.trim() === '') {
+        resolve([])
+        return
+      }
+
+      if (!space) {
+        resolve([])
+        return
+      }
+
+      const room = space.rooms.find((room) => room._id === roomId)
+
+      if (!room) {
+        resolve([])
+        return
+      }
+
+      const openHour = parseInt(space.opentime.substring(0, 2))
+      const openMinute = parseInt(space.opentime.substring(2, 4))
+      const closeHour = parseInt(space.closetime.substring(0, 2))
+      const closeMinute = parseInt(space.closetime.substring(2, 4))
+
+      const timeSlots = []
+
+      let currentHour = openHour
+      let currentMinute = openMinute
+
+      while (
+        currentHour < closeHour ||
+        (currentHour === closeHour && currentMinute < closeMinute)
+      ) {
+        const time = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`
+
+        const available = Math.random() > 0.3
+
+        timeSlots.push({ time, available })
+
+        currentHour += 1
+
+        if (currentHour !== openHour) {
+          currentMinute = 0
+        }
+      }
+
+      resolve(timeSlots)
+    }, 300)
+  })
+}

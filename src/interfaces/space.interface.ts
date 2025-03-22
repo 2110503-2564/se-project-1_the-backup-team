@@ -18,3 +18,8 @@ export interface Space {
   closetime: string
   rooms: Room[]
 }
+
+export interface TimeSlots {
+  time: string
+  available: boolean
+}
