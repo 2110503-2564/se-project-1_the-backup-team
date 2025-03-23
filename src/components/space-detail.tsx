@@ -126,7 +126,7 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                     className='cursor-pointer'
                     onClick={() => {
                       setSelectedRoom(room)
-                      document.getElementById('spaces')?.scrollIntoView({
+                      document.getElementById('booking-menu')?.scrollIntoView({
                         behavior: 'smooth',
                       })
                     }}
