@@ -8,15 +8,15 @@ export const commandConfig: CommandsConfig = {
     },
     {
       title: 'Explore',
-      href: '/',
+      href: '/#featured',
     },
     {
       title: 'Spaces',
       href: '/spaces',
     },
     {
-      title: 'Booking',
-      href: '/booking',
+      title: 'Reservations',
+      href: '/reservations',
     },
     {
       title: 'Account',

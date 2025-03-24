@@ -1,3 +1,5 @@
+import { Reservation } from '@/interfaces/reservation.interface'
+
 export interface Pagination {
   total: number
   page: number
@@ -20,4 +22,9 @@ export interface MainNavItem {
 
 export interface CommandsConfig {
   mainNav: MainNavItem[]
+}
+
+export interface ReservationsClientProps {
+  initialReservations: Reservation[]
+  initialSort: string
 }

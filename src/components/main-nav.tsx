@@ -30,13 +30,15 @@ const MainNav = () => {
           Spaces
         </Link>
         <Link
-          href='/reserve'
+          href='/reservations'
           className={cn(
             'transition-colors hover:text-foreground/80',
-            pathname === '/reserve' ? 'text-foreground' : 'text-foreground/80',
+            pathname === '/reservations'
+              ? 'text-foreground'
+              : 'text-foreground/80',
           )}
         >
-          Reserve
+          My Reservations
         </Link>
       </nav>
     </div>
