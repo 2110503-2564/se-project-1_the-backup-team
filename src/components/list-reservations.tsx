@@ -22,9 +22,13 @@ const ListReservations = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-1/5'>Space & Room</TableHead>
-            <TableHead className='hidden md:table-cell'>Date</TableHead>
-            <TableHead className='hidden md:table-cell'>Time</TableHead>
+            <TableHead className='w-2/5'>Space & Room</TableHead>
+            <TableHead className='w-[200px] hidden md:table-cell'>
+              Date
+            </TableHead>
+            <TableHead className='w-[200px] hidden md:table-cell'>
+              Time
+            </TableHead>
             <TableHead className='hidden md:table-cell'>Price</TableHead>
             <TableHead className='text-right'>Actions</TableHead>
           </TableRow>
@@ -39,7 +43,7 @@ const ListReservations = ({
           ) : (
             reservations.map((reservation) => (
               <TableRow key={reservation._id}>
-                <TableCell>
+                <TableCell className='w-1/5'>
                   <Link href={`/spaces/${reservation.space._id}`}>
                     <div className='flex flex-col'>
                       <span className='font-medium'>
