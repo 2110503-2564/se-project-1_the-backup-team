@@ -1,0 +1,159 @@
+[
+  {
+    "_id": "65710a5df9e76553e6a301",
+    "reservationDate": "2023-12-05T09:00:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a201",
+      "name": "The Hive Thonglor",
+      "tel": "02-662-6062"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a199",
+      "roomNumber": "103",
+      "price": 200,
+      "capacity": 6,
+      "facilities": [
+        "Projector",
+        "Conference Phone",
+        "WiFi",
+        "Coffee Machine",
+        "LAN Cable"
+      ]
+    }
+  },
+  {
+    "_id": "65710a5df9e76553e6a302",
+    "reservationDate": "2023-12-06T14:00:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a202",
+      "name": "WeWork T-One Building",
+      "tel": "02-234-5678"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a103",
+      "roomNumber": "201",
+      "price": 450,
+      "capacity": 6,
+      "facilities": ["Smart TV", "WiFi", "Standing Desk"]
+    }
+  },
+  {
+    "_id": "65710a5df9e76553e6a303",
+    "reservationDate": "2023-12-07T10:30:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a203",
+      "name": "Spaces Chamchuri Square",
+      "tel": "02-160-0808"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a105",
+      "roomNumber": "301",
+      "price": 450,
+      "capacity": 5,
+      "facilities": ["Whiteboard", "HDMI Connection", "WiFi", "Water Dispenser"]
+    }
+  },
+  {
+    "_id": "65710a5df9e76553e6a304",
+    "reservationDate": "2023-12-10T13:00:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a204",
+      "name": "JustCo at AIA Sathorn Tower",
+      "tel": "02-119-7999"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a108",
+      "roomNumber": "402",
+      "price": 450,
+      "capacity": 15,
+      "facilities": [
+        "Dual Projectors",
+        "Conference Call Equipment",
+        "WiFi",
+        "Catering Service"
+      ]
+    }
+  },
+  {
+    "_id": "65710a5df9e76553e6a305",
+    "reservationDate": "2023-12-12T15:30:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a206",
+      "name": "The Work Loft",
+      "tel": "02-103-2099"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a112",
+      "roomNumber": "602",
+      "price": 450,
+      "capacity": 10,
+      "facilities": ["Projector", "Surround Sound", "WiFi", "Refreshments"]
+    }
+  },
+  {
+    "_id": "65710a5df9e76553e6a306",
+    "reservationDate": "2023-12-15T09:00:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a208",
+      "name": "The Great Room Gaysorn Tower",
+      "tel": "02-073-0202"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a116",
+      "roomNumber": "802",
+      "price": 450,
+      "capacity": 12,
+      "facilities": [
+        "Digital Whiteboard",
+        "Video Conferencing",
+        "WiFi",
+        "City View"
+      ]
+    }
+  },
+  {
+    "_id": "65710a5df9e76553e6a307",
+    "reservationDate": "2023-12-18T11:00:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a210",
+      "name": "Draft Board",
+      "tel": "02-210-0086"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a119",
+      "roomNumber": "1001",
+      "price": 450,
+      "capacity": 7,
+      "facilities": ["Writable Walls", "TV Screen", "WiFi", "Coffee Bar"]
+    }
+  },
+  {
+    "_id": "65710a5df9e76553e6a308",
+    "reservationDate": "2023-12-20T16:00:00Z",
+    "user": "001",
+    "space": {
+      "_id": "6570f10a5df9e76553e6a212",
+      "name": "Busy Bees Sukhumvit",
+      "tel": "02-000-1235"
+    },
+    "room": {
+      "_id": "6570f10a5df9e76553e6a124",
+      "roomNumber": "1202",
+      "price": 450,
+      "capacity": 10,
+      "facilities": [
+        "Projector",
+        "Bluetooth Sound System",
+        "WiFi",
+        "Refreshment Corner"
+      ]
+    }
+  }
+]
