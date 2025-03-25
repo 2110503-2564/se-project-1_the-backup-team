@@ -1,22 +1,24 @@
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const UserTag = ({
   logo,
-  username,
+  name,
   email,
 }: {
   logo: string
-  username: string
+  name: string
   email: string
 }) => {
   return (
     <>
       <Avatar className='h-6 w-6 roudned-lg'>
         <AvatarImage src={logo} />
-        <AvatarFallback>FB</AvatarFallback>
+        <AvatarFallback>
+          <div className='size-full bg-muted'></div>
+        </AvatarFallback>
       </Avatar>
       <div className='grid flex-1 text-left text-sm leading-tight'>
-        <span className='truncate'>{username}</span>
+        <span className='truncate'>{name}</span>
         <span className='truncate text-xs text-muted-foreground'>{email}</span>
       </div>
     </>
