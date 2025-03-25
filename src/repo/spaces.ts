@@ -1,10 +1,9 @@
-import spaces from './spaces.json'
 import {
   Space,
   SpacesPagination,
   TimeSlots,
 } from '@/interfaces/space.interface'
-import { APIResponse, Pagination } from '@/interfaces/interface'
+import { Pagination } from '@/interfaces/interface'
 
 /*  currently using mockup data
  *  TODO: Implement Backend API Usage
@@ -48,51 +47,6 @@ export const getSpaceById = (id: string) => {
     } catch (error) {
       reject(error instanceof Error ? error : new Error('Update failed'))
     }
-  })
-}
-
-export const searchSpaces = (
-  query: string,
-  page: number = 1,
-  limit: number = 10,
-) => {
-  return new Promise<{
-    spaces: Space[]
-    pagination: Pagination
-  }>((resolve) => {
-    setTimeout(() => {
-      const searchTerm = query.toLowerCase().trim()
-
-      const filteredSpaces = spaces.filter(
-        (space) =>
-          space.name.toLowerCase().includes(searchTerm) ||
-          space.district.toLowerCase().includes(searchTerm) ||
-          space.province.toLowerCase().includes(searchTerm),
-      )
-
-      const currentPage = Math.max(1, page)
-      const itemsPerPage = Math.max(1, limit)
-
-      const startIndex = (currentPage - 1) * itemsPerPage
-      const endIndex = startIndex + itemsPerPage
-
-      const totalSpaces = filteredSpaces.length
-      const totalPages = Math.ceil(totalSpaces / itemsPerPage)
-
-      const paginatedSpaces = filteredSpaces.slice(startIndex, endIndex)
-
-      resolve({
-        spaces: paginatedSpaces as Space[],
-        pagination: {
-          total: totalSpaces,
-          page: currentPage,
-          limit: itemsPerPage,
-          totalPages,
-          hasNextPage: currentPage < totalPages,
-          hasPrevPage: currentPage > 1,
-        },
-      })
-    }, 300)
   })
 }
 
