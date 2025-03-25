@@ -1,7 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { CardHeader } from '@/components/ui/card'
-import { CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { ShieldCheck } from 'lucide-react'
 import { Handshake } from 'lucide-react'
 import { CalendarDays } from 'lucide-react'
@@ -34,7 +30,7 @@ const Home = () => {
                 100% Satisfaction Guarantee
               </h3>
               <p className='text-gray-600 text-sm'>
-                Full refund if you`&apos;`re not satisfied.
+                Full refund if you&apos;re not satisfied.
               </p>
             </div>
             <div className='flex flex-col items-center'>

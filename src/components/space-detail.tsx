@@ -84,57 +84,117 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
 
           <h2 className='text-2xl font-bold mt-10 mb-6'>Available Rooms</h2>
           <Separator className='my-6' />
-          <div className='grid grid-cols-2 gap-6'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
             {space.rooms.map((room) => (
-              <Card key={room._id} className='w-full pt-0 rounded-lg'>
-                <AspectRatio ratio={16 / 9}>
-                  <Image
-                    src='https://placehold.co/600x400.png'
-                    alt='Card Image'
-                    fill
-                    className='rounded-t-md object-cover'
-                  />
-                </AspectRatio>
-                <CardContent className='space-y-2'>
-                  <CardTitle className='text-xl font-bold truncate'>
-                    {room.roomNumber}
-                  </CardTitle>
-                  <CardDescription className='text-muted-foreground space-y-1'>
-                    <div className='flex gap-1 overflow-x-auto no-scrollbar'>
-                      {room.facilities.map((item) => (
-                        <Badge key={item} variant='outline'>
-                          {item}
-                        </Badge>
-                      ))}
+              <>
+                <Card
+                  key={room._id}
+                  className='hidden sm:flex w-full pt-0 rounded-lg'
+                >
+                  <AspectRatio ratio={16 / 9}>
+                    <Image
+                      src='https://placehold.co/600x400.png'
+                      alt='Card Image'
+                      fill
+                      className='rounded-t-md object-cover'
+                    />
+                  </AspectRatio>
+                  <CardContent className='space-y-2'>
+                    <CardTitle className='text-xl font-bold truncate'>
+                      {room.roomNumber}
+                    </CardTitle>
+                    <CardDescription className='text-muted-foreground space-y-1'>
+                      <div className='flex gap-1 overflow-x-auto no-scrollbar'>
+                        {room.facilities.map((item) => (
+                          <Badge key={item} variant='outline'>
+                            {item}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardDescription>
+                  </CardContent>
+                  <CardFooter className='pt-0 mt-auto flex justify-between'>
+                    <div className='flex gap-5'>
+                      <div className='flex gap-2 items-center'>
+                        <Users className='w-4 h-4' />
+                        {room.capacity}
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <Coins className='w-4 h-4' />
+                        {room.price} ฿
+                      </div>
                     </div>
-                  </CardDescription>
-                </CardContent>
-                <CardFooter className='pt-0 mt-auto flex justify-between'>
-                  <div className='flex gap-5'>
-                    <div className='flex gap-2 items-center'>
-                      <Users className='w-4 h-4' />
-                      {room.capacity}
+
+                    <Button
+                      size='sm'
+                      className='cursor-pointer'
+                      onClick={() => {
+                        setSelectedRoom(room)
+                        document
+                          .getElementById('booking-menu')
+                          ?.scrollIntoView({
+                            behavior: 'smooth',
+                          })
+                      }}
+                    >
+                      Select this room
+                    </Button>
+                  </CardFooter>
+                </Card>
+                {/* Small card */}
+                <div className='block sm:hidden h-[200px] rounded-xl border bg-card text-card-foreground shadow overflow-hidden'>
+                  <div className='h-full grid grid-cols-5 gap-2'>
+                    <div className='col-span-2 relative w-full'>
+                      <Image
+                        src='https://placehold.co/600x400.png'
+                        alt='Card Image'
+                        fill
+                        className='rounded-l-md object-cover'
+                      />
                     </div>
-                    <div className='flex gap-2 items-center'>
-                      <Coins className='w-4 h-4' />
-                      {room.price} ฿
+                    <div className='col-span-3 flex flex-col justify-between p-4 overflow-hidden'>
+                      <div className='flex flex-col gap-2'>
+                        <div className='text-xl font-bold truncate'>
+                          {room.roomNumber}
+                        </div>
+                        <div className='flex gap-1 overflow-x-auto no-scrollbar'>
+                          {room.facilities.map((item) => (
+                            <Badge key={item} variant='outline'>
+                              {item}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className='flex gap-5'>
+                          <div className='flex gap-2 items-center'>
+                            <Users className='w-4 h-4' />
+                            {room.capacity}
+                          </div>
+                          <div className='flex gap-2 items-center'>
+                            <Coins className='w-4 h-4' />
+                            {room.price} ฿
+                          </div>
+                        </div>
+                      </div>
+                      <div className='flex justify-end'>
+                        <Button
+                          size='sm'
+                          className='w-32 cursor-pointer'
+                          onClick={() => {
+                            setSelectedRoom(room)
+                            document
+                              .getElementById('booking-menu')
+                              ?.scrollIntoView({
+                                behavior: 'smooth',
+                              })
+                          }}
+                        >
+                          Select this room
+                        </Button>
+                      </div>
                     </div>
                   </div>
-
-                  <Button
-                    size='sm'
-                    className='cursor-pointer'
-                    onClick={() => {
-                      setSelectedRoom(room)
-                      document.getElementById('booking-menu')?.scrollIntoView({
-                        behavior: 'smooth',
-                      })
-                    }}
-                  >
-                    Select this room
-                  </Button>
-                </CardFooter>
-              </Card>
+                </div>
+              </>
             ))}
           </div>
         </div>
