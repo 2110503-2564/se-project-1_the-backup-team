@@ -104,7 +104,6 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
       setIsLoading(false)
     }
   }
-
   return (
     <section id='booking'>
       <Button variant='ghost' size='sm' asChild className='mb-6'>
