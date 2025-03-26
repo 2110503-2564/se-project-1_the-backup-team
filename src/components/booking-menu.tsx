@@ -84,7 +84,11 @@ const BookingMenu = ({
       }
       toast.success('Reserved! Enjoy')
     } catch (e) {
-      console.log(e)
+      if (e instanceof Error && e.message.includes('exceeded the maximum')) {
+        toast.error('Exceeded the maximum number of reservations')
+      } else {
+        toast.error('Something went wrong!')
+      }
     }
   }
 
