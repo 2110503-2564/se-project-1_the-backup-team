@@ -90,9 +90,23 @@ export const updateUserProfile = (
 }
 
 export const registerUser = (user: Omit<User, '_id'>) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/auth/register`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...user }),
+        },
+      )
+      if (!response.ok) throw new Error('Cannot register')
+
       resolve({})
-    }, 1500)
+    } catch (error) {
+      reject(error instanceof Error ? error : new Error('Register failed'))
+    }
   })
 }
