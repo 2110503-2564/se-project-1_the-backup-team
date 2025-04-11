@@ -1,13 +1,24 @@
-import { ShieldCheck } from 'lucide-react'
-import { Handshake } from 'lucide-react'
-import { CalendarDays } from 'lucide-react'
-import UserHomePageSection from '@/components/UserHomePageSection'
+import HomePage from '@/components/home'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardFooter,
+  CardDescription,
+} from '@/components/ui/card'
+import { fetchSpaces } from '@/repo/spaces'
+import { Clock, MapPin } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Suspense } from 'react'
 
-const Home = () => {
+const Home = async () => {
+  const spaces = await fetchSpaces()
   return (
     <main>
       <div className='flex flex-col items-center justify-center'>
-        <div className='flex flex-col items-center justify-center w-full py-2 text-center bg-gray min-h-[80vh] bg-gray-50'>
+        <div className='flex flex-col items-center justify-center w-full text-center bg-gray min-h-[80vh] bg-gray-50 border-b border-dashed'>
           <div className='text-4xl font-bold md:text-5xl'>
             Find your Perfect Spaces
           </div>
@@ -15,48 +26,73 @@ const Home = () => {
             Book a room for meetings, study, or coworking—anytime, anywhere.
           </div>
         </div>
-
-        <section className='text-center py-10 border-t border-b mt-10'>
-          <div className='text-3xl font-bold'>DESIGNED FOR MODERN WORKERS</div>
-          <p className='text-lg text-gray-600 mt-2'>
-            Flexible spaces for productivity and collaboration.
-          </p>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mt-10'>
-            <div className='flex flex-col items-center'>
-              <span className='text-4xl'>
-                <ShieldCheck />
-              </span>
-              <h3 className='font-semibold mt-2'>
-                100% Satisfaction Guarantee
-              </h3>
-              <p className='text-gray-600 text-sm'>
-                Full refund if you&apos;re not satisfied.
-              </p>
-            </div>
-            <div className='flex flex-col items-center'>
-              <span className='text-4xl'>
-                <Handshake />
-              </span>
-              <h3 className='font-semibold mt-2'>Trusted Coworking Spaces</h3>
-              <p className='text-gray-600 text-sm'>
-                Real user reviews, real experiences.
-              </p>
-            </div>
-            <div className='flex flex-col items-center'>
-              <span className='text-4xl'>
-                <CalendarDays />
-              </span>
-              <h3 className='font-semibold mt-2'>Peace of Mind</h3>
-              <p className='text-gray-600 text-sm'>
-                Once booked, your seat is secured.
-              </p>
+        <div className='container-wrapper gap-6'>
+          <div className='container border-b border-dashed'>
+            <div className='flex flex-col items-center py-6'>
+              <div className='w-full rounded-md inset-shadow-sm p-6'>
+                <div className='flex gap-4 overflow-y-scroll no-scrollbar'>
+                  {spaces.spaces.map((space) => (
+                    <Link key={space._id} href={`/spaces/${space._id}`}>
+                      <Card
+                        key={space._id}
+                        className='min-w-[375px] rounded-lg overflow-hidden pt-0 min-h-[24rem]'
+                      >
+                        <div className='relative bg-muted block'>
+                          <AspectRatio ratio={16 / 9}>
+                            <Suspense
+                              fallback={
+                                <div className='bg-black size-full'>
+                                  TESTSETETSET
+                                </div>
+                              }
+                            >
+                              <Image
+                                key={space._id}
+                                src={`/spaces${space.image}`}
+                                alt='Card Image'
+                                fill
+                                loading='lazy'
+                                className='rounded-t-md object-cover'
+                              />
+                            </Suspense>
+                          </AspectRatio>
+                        </div>
+                        <CardContent className='space-y-4'>
+                          <div className='space-y-1'>
+                            <CardTitle className='text-xl font-bold truncate'>
+                              {space.name}
+                            </CardTitle>
+                            <CardDescription className='flex gap-1 items-center text-muted-foreground'>
+                              <MapPin className='w-4 h-4' />
+                              {`${space.address}, ${space.district}, ${space.province}`}
+                            </CardDescription>
+                          </div>
+                        </CardContent>
+                        <CardFooter className='mt-auto'>
+                          <div className='flex flex-col justify-between items-start w-full space-y-4'>
+                            <div className='flex w-full items-center justify-between'>
+                              <div className='text-gray-500 text-sm flex gap-1 items-center'>
+                                <Clock className='w-4 h-4' />
+                                {`${space.opentime.slice(0, 2)}:${space.opentime.slice(2)} - ${space.closetime.slice(0, 2)}:${space.closetime.slice(2)}`}
+                              </div>
+                              <div className='text-gray-500 text-sm flex gap-1 items-center'>
+                                {space.rooms.length > 1 ? 'rooms' : 'room'}{' '}
+                                available
+                              </div>
+                            </div>
+                          </div>
+                        </CardFooter>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </section>
-
-        <section className='w-full max-w-5xl px-4 mt-2 mb-10' id='featured'>
-          <UserHomePageSection></UserHomePageSection>
-        </section>
+          <div className='container'>
+            <HomePage />
+          </div>
+        </div>
       </div>
     </main>
   )

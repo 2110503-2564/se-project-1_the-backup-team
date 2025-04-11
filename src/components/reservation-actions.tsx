@@ -7,20 +7,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { deleteReservation } from '@/repo/reservations'
-import {
-  Calendar,
-  CalendarIcon,
-  Clock,
-  Eye,
-  MoreHorizontal,
-  X,
-} from 'lucide-react'
+import { deleteReservation, updateReservation } from '@/repo/reservations'
+import { CalendarIcon, Clock, Eye, MoreHorizontal, X } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { MouseEvent } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import {
   Dialog,
@@ -30,10 +23,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog'
-import { Label } from './ui/label'
-import { Input } from './ui/input'
-import { Space } from '@/interfaces/space.interface'
+} from '@/components/ui/dialog'
+
+import { TimeSlots } from '@/interfaces/space.interface'
 import { Reservation } from '@/interfaces/reservation.interface'
 import {
   Select,
@@ -41,23 +33,45 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+} from '@/components/ui/select'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { Calendar as CalendarModal } from '@/components/ui/calendar'
-const ReservationActions = ({
-  reservation,
-  space,
-  space_id,
-  reservation_id,
-}: {
-  reservation: Reservation
-  space: Partial<Space>
-  space_id: string
-  reservation_id: string
-}) => {
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
+import { getTimeslots } from '@/repo/spaces'
+import { revalidatePath } from 'next/cache'
+
+const ReservationActions = ({ reservation }: { reservation: Reservation }) => {
   const { data: session } = useSession()
+  const [date, setDate] = useState<Date | undefined>(
+    new Date(reservation.reservationDate),
+  )
+  const [time, setTime] = useState('')
+  const [timeslots, setTimeslots] = useState<TimeSlots[]>([])
+  const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    const fetchTimeSlots = async () => {
+      if (date && openModal) {
+        const ts = await getTimeslots(
+          reservation.space._id,
+          reservation.room._id,
+          date.toISOString(),
+        )
+        setTimeslots(ts)
+      }
+    }
+    fetchTimeSlots()
+    return () => {
+      setTimeslots([])
+      setTime('')
+    }
+  }, [date, openModal, reservation.space._id, reservation.room._id])
 
   const handleDelete = async (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -65,7 +79,7 @@ const ReservationActions = ({
 
     try {
       const response = await deleteReservation(
-        reservation_id,
+        reservation._id,
         session.accessToken,
       )
 
@@ -73,20 +87,38 @@ const ReservationActions = ({
         toast.error(response.message || 'Failed to cancel reservation')
         return
       }
+
       toast.success('Reservation cancelled')
       router.refresh()
     } catch (e) {
-      toast.error('Something wrong!')
-      console.log(e)
+      toast.error('Something went wrong!')
     }
   }
 
-  const handleUpdate = async (e: MouseEvent<HTMLDivElement>) => {
+  const handleUpdate = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+    if (!session?.accessToken) return
+    if (!date) return
+    try {
+      const response = await updateReservation(
+        reservation._id,
+        date,
+        time,
+        session.accessToken,
+      )
+      if (!response.success) {
+        toast.error(response.message || 'Failed to cancel reservation')
+      }
+      toast.success('Reservation updated')
+      setOpenModal(false)
+      router.refresh()
+    } catch (e) {
+      toast.error('Something went wrong!')
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={openModal} onOpenChange={setOpenModal}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className='h-full'>
@@ -96,7 +128,7 @@ const ReservationActions = ({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
-          <Link href={`/spaces/${space_id}`}>
+          <Link href={`/spaces/${reservation.space._id}`}>
             <DropdownMenuItem>
               <Eye className='mr-2 h-4 w-4' />
               View Space Details
@@ -106,7 +138,7 @@ const ReservationActions = ({
           <DropdownMenuItem asChild>
             <DialogTrigger className='w-full'>
               <>
-                <Calendar className='mr-2 h-4 w-4' />
+                <CalendarIcon className='mr-2 h-4 w-4' />
                 Reschedule
               </>
             </DialogTrigger>
@@ -121,20 +153,10 @@ const ReservationActions = ({
       </DropdownMenu>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>Edit reservation</DialogTitle>
-          <DialogDescription>Edit your reservation details</DialogDescription>
+          <DialogTitle>Reschedule</DialogTitle>
+          <DialogDescription>Change reservation date & time</DialogDescription>
         </DialogHeader>
-        <div className='grid gap-4 py-4'>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='name' className='text-right'>
-              Room
-            </Label>
-            <Input
-              id='room'
-              defaultValue={reservation.room.roomNumber}
-              className='col-span-3'
-            />
-          </div>
+        <div className='grid grid-cols-2 gap-4 py-4'>
           <Popover>
             <PopoverTrigger asChild>
               <div className='w-full basis-1/2'>
@@ -145,25 +167,28 @@ const ReservationActions = ({
                   )}
                 >
                   <CalendarIcon />
-                  {<span>Pick a date</span>}
+                  {date ? format(date, 'PPP') : <span>Pick a date</span>}
                 </Button>
               </div>
             </PopoverTrigger>
             <PopoverContent className='w-auto p-0' align='start'>
-              <CalendarModal
+              <Calendar
                 mode='single'
                 fromDate={new Date()}
+                selected={date}
+                onSelect={setDate}
                 initialFocus
                 required
               />
             </PopoverContent>
           </Popover>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='username' className='text-right'>
-              Time
-            </Label>
-            <Select required>
-              <SelectTrigger className='col-span-3 w-full cursor-pointer'>
+
+          <div>
+            <Select value={time} onValueChange={setTime} required>
+              <SelectTrigger
+                className='col-span-3 w-full cursor-pointer'
+                disabled={timeslots.length === 0}
+              >
                 <SelectValue
                   placeholder={
                     <div className='w-full flex items-center gap-2'>
@@ -173,26 +198,29 @@ const ReservationActions = ({
                   }
                 />
               </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: 25 }, (_, i) => {
-                  const hour = i.toString().padStart(2, '0')
-                  const t = `${hour}:00`
-                  return (
-                    <SelectItem
-                      key={t}
-                      value={t}
-                      // disabled={t}
-                    >
-                      {t}
-                    </SelectItem>
-                  )
-                })}
+              <SelectContent className='max-h-60 overflow-y-auto'>
+                {timeslots.map((t) => (
+                  <SelectItem
+                    key={t.time}
+                    value={t.time}
+                    disabled={!t.available}
+                  >
+                    {t.time}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
         </div>
         <DialogFooter>
-          <Button type='submit'>Update reservation</Button>
+          <Button
+            type='submit'
+            onClick={handleUpdate}
+            disabled={!date || !time}
+            className='cursor-pointer'
+          >
+            Update reservation
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

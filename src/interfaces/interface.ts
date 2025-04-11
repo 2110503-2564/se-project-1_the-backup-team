@@ -16,6 +16,12 @@ export interface SpacesPageProps {
   }
 }
 
+export interface ReservationsPageParams {
+  sort?: string
+  layout?: string
+  t?: string
+}
+
 export interface MainNavItem {
   title: string
   href: string
@@ -26,8 +32,7 @@ export interface CommandsConfig {
 }
 
 export interface ReservationsClientProps {
-  initialReservations: Reservation[]
-  initialSort: string
+  reservations: Reservation[]
   session: Session | null
 }
 

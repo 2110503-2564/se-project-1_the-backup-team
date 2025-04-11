@@ -9,6 +9,10 @@ const UserTag = ({
   name: string
   email: string
 }) => {
+  const splited_name = name.split(' ')
+  if (splited_name.length >= 2) {
+    name = splited_name[0] + ' ' + splited_name[1][0] + '.'
+  }
   return (
     <>
       <Avatar className='h-6 w-6 roudned-lg'>

@@ -27,11 +27,12 @@ import {
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
-import { getReservableTime } from '@/repo/spaces'
+import { getTimeslots } from '@/repo/spaces'
 import { useBooking } from '@/context/booking-context'
 import { Session } from 'next-auth'
 import { reserveRoom } from '@/repo/reservations'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const BookingMenu = ({
   space,
@@ -40,6 +41,7 @@ const BookingMenu = ({
   space: Space
   session: Session | null
 }) => {
+  const router = useRouter()
   const { selectedRoom, setSelectedRoom } = useBooking()
 
   const [date, setDate] = useState<Date>()
@@ -49,12 +51,10 @@ const BookingMenu = ({
   useEffect(() => {
     const fetchTimeSlots = async () => {
       if (selectedRoom && date) {
-        const ts = await getReservableTime(
+        const ts = await getTimeslots(
           space._id,
           selectedRoom?._id,
-          space.opentime,
-          space.closetime,
-          date?.toString(),
+          date.toISOString(),
         )
         setTimeslots(ts)
       }
@@ -72,6 +72,7 @@ const BookingMenu = ({
       if (!selectedRoom || !date || !session?.accessToken) {
         return
       }
+
       const response = await reserveRoom(
         space._id,
         selectedRoom._id,
@@ -84,12 +85,16 @@ const BookingMenu = ({
         return
       }
       toast.success('Reserved! Enjoy')
+      router.push(`/reservations?_t=${new Date().getTime()}`)
     } catch (e) {
       if (e instanceof Error && e.message.includes('exceeded the maximum')) {
         toast.error('Exceeded the maximum number of reservations')
       } else {
         toast.error('Something went wrong!')
       }
+    } finally {
+      setTime('')
+      setDate(undefined)
     }
   }
 
@@ -199,7 +204,7 @@ const BookingMenu = ({
                   <SelectItem
                     key={t.time}
                     value={t.time}
-                    disabled={t.available}
+                    disabled={!t.available}
                   >
                     {t.time}
                   </SelectItem>

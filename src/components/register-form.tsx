@@ -30,6 +30,7 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { registerUser } from '@/repo/users'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 
 const formSchema = z
   .object({
@@ -99,16 +100,34 @@ const RegisterForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     try {
-      const response = await registerUser({
+      const registrationResponse = await registerUser({
         name: `${values.firstName} ${values.lastName}`,
         email: values.email,
         password: values.password,
         phone: values.phone,
         role: 'user',
       })
+      if (!registrationResponse.success) {
+        throw new Error()
+      }
 
-      toast.success('Registration successfully')
+      const response = await signIn('password', {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      })
+
+      if (response?.error) {
+        toast.error(
+          "Registration successful but couldn't sign in automatically",
+        )
+        router.push('/login')
+        return
+      }
+
       router.push('/')
+      router.refresh()
+      toast.success('Account created successfully')
     } catch (error) {
       toast.error('Registration failed')
       console.error('Registration failed:', error)

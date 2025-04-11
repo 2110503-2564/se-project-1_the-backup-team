@@ -30,8 +30,8 @@ const GridReservations = ({
                 <AspectRatio ratio={16 / 9}>
                   <Image
                     src={
-                      reservation.space.image
-                        ? `/spaces${reservation.space.image}`
+                      reservation.room.image
+                        ? `/spaces${reservation.room.image}`
                         : '/spaces/placehold.jpg'
                     }
                     alt='Card Image'
@@ -51,12 +51,7 @@ const GridReservations = ({
                     </p>
                   </Link>
 
-                  <ReservationActions
-                    reservation={reservation}
-                    space={reservation.space}
-                    space_id={reservation.space._id}
-                    reservation_id={reservation._id}
-                  />
+                  <ReservationActions reservation={reservation} />
                 </div>
                 <div className='mt-4 pt-4 flex justify-between items-end'>
                   <div className='text-sm text-muted-foreground'>

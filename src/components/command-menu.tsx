@@ -13,7 +13,8 @@ import {
 } from './ui/command'
 import { useRouter } from 'next/navigation'
 import { commandConfig } from '@/config/commands'
-import { File, LogIn, LogOut, Search } from 'lucide-react'
+import { File, LogIn, LogOut, Search, User } from 'lucide-react'
+import { signOut } from 'next-auth/react'
 
 const CommandMenu = ({ ...props }: DialogProps) => {
   const router = useRouter()
@@ -80,14 +81,18 @@ const CommandMenu = ({ ...props }: DialogProps) => {
           </CommandGroup>
           <CommandGroup heading='Authentication'>
             <CommandItem
+              onSelect={() => runCommand(() => router.push('/register'))}
+            >
+              <User />
+              Register
+            </CommandItem>
+            <CommandItem
               onSelect={() => runCommand(() => router.push('/login'))}
             >
               <LogIn />
               Log in
             </CommandItem>
-            <CommandItem
-              onSelect={() => runCommand(() => router.push('/logout'))}
-            >
+            <CommandItem onSelect={() => runCommand(() => signOut())}>
               <LogOut />
               Log out
             </CommandItem>
