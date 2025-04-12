@@ -1,20 +1,16 @@
 'use client'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { deleteReservation, updateReservation } from '@/repo/reservations'
-import { CalendarIcon, Clock, Eye, MoreHorizontal, X } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { MouseEvent, useEffect, useState } from 'react'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { MouseEvent, useEffect, useState } from 'react'
+
+import { format } from 'date-fns'
+import { CalendarIcon, Clock, Eye, MoreHorizontal, X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Dialog,
   DialogContent,
@@ -24,9 +20,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-
-import { TimeSlots } from '@/interfaces/space.interface'
-import { Reservation } from '@/interfaces/reservation.interface'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -34,16 +39,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Reservation } from '@/interfaces/reservation.interface'
+import { TimeSlots } from '@/interfaces/space.interface'
 import { cn } from '@/lib/utils'
-import { Calendar } from '@/components/ui/calendar'
-import { format } from 'date-fns'
+import { deleteReservation, updateReservation } from '@/repo/reservations'
 import { getTimeslots } from '@/repo/spaces'
-import { revalidatePath } from 'next/cache'
 
 const ReservationActions = ({ reservation }: { reservation: Reservation }) => {
   const { data: session } = useSession()
@@ -135,7 +135,7 @@ const ReservationActions = ({ reservation }: { reservation: Reservation }) => {
             </DropdownMenuItem>
           </Link>
 
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild disabled={reservation.status !== 'active'}>
             <DialogTrigger className='w-full'>
               <>
                 <CalendarIcon className='mr-2 h-4 w-4' />
@@ -145,7 +145,11 @@ const ReservationActions = ({ reservation }: { reservation: Reservation }) => {
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem className='text-red-600' onClick={handleDelete}>
+          <DropdownMenuItem
+            className='text-red-600'
+            disabled={reservation.status !== 'active'}
+            onClick={handleDelete}
+          >
             <X className='mr-2 h-4 w-4 text-red-600' />
             Cancel Reservation
           </DropdownMenuItem>

@@ -1,8 +1,14 @@
 'use client'
 
-import { Button } from './ui/button'
-import { type DialogProps } from '@radix-ui/react-dialog'
 import { useCallback, useEffect, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+import { type DialogProps } from '@radix-ui/react-dialog'
+import { File, LogIn, LogOut, Search, User } from 'lucide-react'
+import { signOut } from 'next-auth/react'
+
+import { Button } from '@/components/ui/button'
 import {
   CommandDialog,
   CommandEmpty,
@@ -10,11 +16,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from './ui/command'
-import { useRouter } from 'next/navigation'
+} from '@/components/ui/command'
 import { commandConfig } from '@/config/commands'
-import { File, LogIn, LogOut, Search, User } from 'lucide-react'
-import { signOut } from 'next-auth/react'
 
 const CommandMenu = ({ ...props }: DialogProps) => {
   const router = useRouter()

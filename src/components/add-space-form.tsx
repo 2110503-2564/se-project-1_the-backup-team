@@ -1,13 +1,17 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -26,8 +30,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Button } from './ui/button'
-import { Loader2 } from 'lucide-react'
 import { addSpace } from '@/repo/spaces'
 
 const formSchema = z.object({

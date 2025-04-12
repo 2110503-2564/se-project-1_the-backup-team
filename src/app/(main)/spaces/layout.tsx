@@ -1,3 +1,8 @@
+import Link from 'next/link'
+
+import { Metadata } from 'next'
+import { getServerSession } from 'next-auth'
+
 import AdminPanel from '@/components/admin-panel'
 import {
   PageActions,
@@ -6,11 +11,8 @@ import {
   PageHeaderHeading,
 } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { AdminCursorProvider, useCursor } from '@/context/admin-cursor'
+import { AdminCursorProvider } from '@/context/admin-cursor'
 import { authOptions } from '@/lib/auth-options'
-import { Metadata } from 'next'
-import { getServerSession } from 'next-auth'
-import Link from 'next/link'
 
 const title = 'Finding your spaces'
 const description =

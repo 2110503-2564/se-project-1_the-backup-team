@@ -1,16 +1,19 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { usePathname } from 'next/navigation'
+
 import { MousePointer2, PencilLine, Plus, Trash } from 'lucide-react'
-import { useCursor } from '@/context/admin-cursor'
+
+import { Button } from '@/components/ui/button'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useCursor } from '@/context/admin-cursor'
+
 import AddRoomForm from './add-room-form'
-import { usePathname } from 'next/navigation'
 import AddSpaceForm from './add-space-form'
 
 const AdminPanel = () => {

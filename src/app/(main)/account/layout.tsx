@@ -1,3 +1,8 @@
+import Link from 'next/link'
+
+import { ArrowLeft } from 'lucide-react'
+import { Metadata } from 'next'
+
 import {
   PageActions,
   PageHeader,
@@ -5,9 +10,6 @@ import {
   PageHeaderHeading,
 } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
-import { Metadata } from 'next'
-import Link from 'next/link'
 
 const title = 'Account'
 const description = 'Update your account settings.'

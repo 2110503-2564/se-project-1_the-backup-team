@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-
 import {
-  User,
-  CheckCircle,
   BookOpen,
-  ShieldCheck,
-  Handshake,
   CalendarDays,
+  CheckCircle,
+  Handshake,
+  ShieldCheck,
+  User,
 } from 'lucide-react'
+
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
 const HomePage = () => {
   return (

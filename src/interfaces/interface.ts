@@ -1,5 +1,6 @@
-import { Reservation } from '@/interfaces/reservation.interface'
 import { Session } from 'next-auth'
+
+import { Reservation } from '@/interfaces/reservation.interface'
 
 export interface Pagination {
   total: number
@@ -10,10 +11,8 @@ export interface Pagination {
   hasPrevPage: boolean
 }
 
-export interface SpacesPageProps {
-  searchParams?: {
-    page?: string
-  }
+export interface SpacesPageParams {
+  page?: string
 }
 
 export interface ReservationsPageParams {

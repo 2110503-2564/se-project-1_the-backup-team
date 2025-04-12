@@ -1,36 +1,27 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { Grip, List } from 'lucide-react'
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'
-import { useCallback } from 'react'
 
-const ReservationsLayoutSwitcher = () => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+import { Button } from '@/components/ui/button'
+import { ReservationLayout } from '@/types/types'
 
-  const currentLayout = searchParams.get('layout') || 'grid'
+const ReservationsLayoutSwitcher = ({
+  layout,
+  onLayoutChange,
+}: {
+  layout: ReservationLayout
+  onLayoutChange: (layout: ReservationLayout) => void
+}) => {
+  const updateLayout = (newLayout: ReservationLayout) => {
+    if (newLayout == layout) return
 
-  const updateLayout = useCallback(
-    (layout: 'grid' | 'list') => {
-      if (layout === currentLayout) return
-      const params = new URLSearchParams(searchParams.toString())
+    onLayoutChange(newLayout)
+  }
 
-      if (layout !== 'grid') {
-        params.set('layout', layout)
-      } else {
-        params.delete('layout')
-      }
-
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
-    },
-    [currentLayout, router, pathname, searchParams],
-  )
   return (
     <div className='flex rounded-md'>
       <Button
-        variant={currentLayout === 'list' ? 'default' : 'outline'}
+        variant={layout === 'list' ? 'default' : 'outline'}
         size='icon'
         className='rounded-r-none'
         onClick={() => updateLayout('list')}
@@ -38,7 +29,7 @@ const ReservationsLayoutSwitcher = () => {
         <List className='h-4 w-4' />
       </Button>
       <Button
-        variant={currentLayout === 'grid' ? 'default' : 'outline'}
+        variant={layout === 'grid' ? 'default' : 'outline'}
         size='icon'
         className='rounded-l-none'
         onClick={() => updateLayout('grid')}

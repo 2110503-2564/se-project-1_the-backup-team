@@ -1,26 +1,16 @@
+import NotFound from '@/components/not-found'
 import SpaceDetailClient from '@/components/space-detail'
-import SpaceDetailSkeleton from '@/components/space-detail-skeleton'
 import { getSpaceById } from '@/repo/spaces'
-import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 
-const SpaceDetailLoader = async ({ spaceID }: { spaceID: string }) => {
-  let space
+const SpacePage = async (props: { params: Promise<{ sid: string }> }) => {
+  const params = await props.params
   try {
-    space = await getSpaceById(spaceID)
-    if (!space) notFound()
+    const space = await getSpaceById(params.sid)
+    if (!space) throw new Error()
     return <SpaceDetailClient space={space} />
   } catch (_) {
-    notFound()
+    return <NotFound message='Unable to load this space' retryPath='/spaces' />
   }
-}
-
-const SpacePage = async ({ params }: { params: { sid: string } }) => {
-  return (
-    <Suspense fallback={<SpaceDetailSkeleton />}>
-      <SpaceDetailLoader spaceID={params.sid} />
-    </Suspense>
-  )
 }
 
 export default SpacePage

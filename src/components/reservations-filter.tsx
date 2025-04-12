@@ -1,4 +1,8 @@
 'use client'
+import { useCallback } from 'react'
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,9 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { sortParams } from '@/types/reservations-filter'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback } from 'react'
+import { sortParams } from '@/types/types'
 
 const ReservationsFilter = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()

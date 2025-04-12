@@ -1,9 +1,17 @@
 'use client'
 
+import { useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
-import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -12,14 +20,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-
-import { z } from 'zod'
-import { Loader2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import { Input } from '@/components/ui/input'
 import { updateUserProfile } from '@/repo/users'
-import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -83,7 +85,6 @@ const UpdateForm = () => {
       toast.success('Updated')
     } catch (error) {
       toast.error('Something went wrong, Please try again')
-      console.error('Update error:', error)
     } finally {
       setIsLoading(false)
       router.refresh()

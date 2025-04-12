@@ -1,5 +1,18 @@
 'use client'
-import { useBooking } from '@/context/booking-context'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+import Link from 'next/link'
+
+import {
+  ArrowLeft,
+  Clock,
+  Coins,
+  MapPin,
+  Smartphone,
+  Users,
+} from 'lucide-react'
+import { useSession } from 'next-auth/react'
+
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -12,20 +25,9 @@ import {
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useBooking } from '@/context/booking-context'
 import { Space } from '@/interfaces/space.interface'
-import {
-  ArrowLeft,
-  Clock,
-  Coins,
-  MapPin,
-  Smartphone,
-  Users,
-} from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 
-import dynamic from 'next/dynamic'
 import BookingMenuSkeleton from './booking-menu-skeleton'
 
 const BookingMenu = dynamic(() => import('@/components/booking-menu'), {

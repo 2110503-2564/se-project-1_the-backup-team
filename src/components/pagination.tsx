@@ -7,7 +7,6 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 import { Pagination as PaginationType } from '@/interfaces/interface'
-import { useRouter } from 'next/navigation'
 
 const PaginationBar = ({
   currentPage,

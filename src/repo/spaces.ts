@@ -5,10 +5,6 @@ import {
   TimeSlots,
 } from '@/interfaces/space.interface'
 
-/*  currently using mockup data
- *  TODO: Implement Backend API Usage
- */
-
 export const fetchSpaces = (page: number = 1, limit: number = 6) => {
   return new Promise<SpacesPagination>(async (resolve, reject) => {
     try {
@@ -24,8 +20,8 @@ export const fetchSpaces = (page: number = 1, limit: number = 6) => {
 
       const body = await response.json()
       resolve(body.data as SpacesPagination)
-    } catch (error) {
-      reject(error instanceof Error ? error : new Error('Fetch spaces failed'))
+    } catch (_) {
+      reject()
     }
   })
 }

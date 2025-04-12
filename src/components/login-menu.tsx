@@ -1,6 +1,21 @@
 'use client'
-import Link from 'next/link'
+import { MouseEvent } from 'react'
 
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+import {
+  BadgeCheck,
+  BookCopy,
+  CircleUser,
+  LogOut,
+  MoreVertical,
+} from 'lucide-react'
+import { Session } from 'next-auth'
+import { signOut } from 'next-auth/react'
+import { toast } from 'sonner'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,20 +25,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  BadgeCheck,
-  BookCopy,
-  CircleUser,
-  LogOut,
-  MoreVertical,
-} from 'lucide-react'
+
 import UserTag from './user-tag'
-import { Session } from 'next-auth'
-import { signOut } from 'next-auth/react'
-import { MouseEvent } from 'react'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 const LoginMenu = ({ session }: { session: Session | null }) => {
   const router = useRouter()

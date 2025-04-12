@@ -1,10 +1,13 @@
-import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { Card } from '@/components/ui/card'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+
+import { ArrowLeft } from 'lucide-react'
+
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
+
 import BookingMenuSkeleton from './booking-menu-skeleton'
 
 const SpaceDetailSkeleton = () => {

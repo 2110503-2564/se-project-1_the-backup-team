@@ -1,10 +1,11 @@
+import { Mail, Pencil } from 'lucide-react'
+import { getServerSession } from 'next-auth'
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import UpdateForm from '@/components/update-form'
 import { authOptions } from '@/lib/auth-options'
-import { Mail, Pencil } from 'lucide-react'
-import { getServerSession } from 'next-auth'
 
 const AccountPage = async () => {
   const session = await getServerSession(authOptions)

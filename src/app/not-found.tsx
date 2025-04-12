@@ -1,7 +1,9 @@
+import Link from 'next/link'
+
+import { Home } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Home } from 'lucide-react'
-import Link from 'next/link'
 
 const NotFoundPage = () => {
   return (

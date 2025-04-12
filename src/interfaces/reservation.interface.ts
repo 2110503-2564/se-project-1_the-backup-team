@@ -1,8 +1,11 @@
+import { ReservationStatus } from '@/types/types'
+
 import { Room } from './space.interface'
 
 export interface Reservation {
   _id: string
   reservationDate: string
+  status: ReservationStatus
   user: {
     name: string
     _id: string
@@ -18,6 +21,7 @@ export interface Reservation {
 
 export interface ReservationResponse {
   reservationDate: string
+  status: ReservationStatus
   user: string
   room: string
   space: string

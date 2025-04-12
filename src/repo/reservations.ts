@@ -1,43 +1,15 @@
+import { APIResponse } from '@/interfaces/interface'
 import {
   Reservation,
   ReservationResponse,
 } from '@/interfaces/reservation.interface'
-import { APIResponse } from '@/interfaces/interface'
-import { sortParams } from '@/types/reservations-filter'
+import { sortParams } from '@/types/types'
 
-/*  currently using mockup data
- *  TODO: Implement Backend API Usage
- */
-
-// Why?
-export const fetchReservations = () => {
-  return new Promise<Reservation[]>(async (resolve, reject) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations`,
-      )
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Fetch failed')
-      }
-
-      const body = await response.json()
-
-      resolve(body.data as Reservation[])
-    } catch (error) {
-      reject(
-        error instanceof Error ? error : new Error('Fetch reservation failed'),
-      )
-    }
-  })
-}
-
-export const fetchReservationsByUser = (
+export const fetchReservations = (
   token: string,
   sort: sortParams = 'date-desc',
 ) => {
-  return new Promise<Reservation[]>(async (resolve, reject) => {
+  return new Promise<Reservation[]>(async (resolve, _) => {
     try {
       const queryParams = new URLSearchParams()
       queryParams.append('sort', sort)
@@ -57,9 +29,10 @@ export const fetchReservationsByUser = (
       }
 
       const body = await response.json()
+
       resolve(body.data as Reservation[])
     } catch (e) {
-      reject(e instanceof Error ? e : new Error('Failed to fetch'))
+      resolve([] as Reservation[])
     }
   })
 }
@@ -90,7 +63,7 @@ export const deleteReservation = (reservation: string, token: string) => {
   })
 }
 
-export const reserveRoom = (
+export const createReservation = (
   space: string,
   room: string,
   date: Date,

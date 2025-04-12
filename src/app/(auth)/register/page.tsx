@@ -1,9 +1,10 @@
-import RegisterForm from '@/components/register-form'
 import { Metadata } from 'next'
+
+import RegisterForm from '@/components/register-form'
 
 const title = 'Register'
 const description =
-  'Create an account to manage and track your intergalactic journeys with SpaceFlow.'
+  'Create an account to manage and track your intergalactic journeys with Spaceflow.'
 export const metadata: Metadata = {
   title,
   description,

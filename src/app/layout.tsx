@@ -1,13 +1,12 @@
-import type { Metadata } from 'next'
-import SiteHeader from '@/components/site-header'
-
 import './globals.css'
-import { cn } from '@/lib/utils'
-import { fontMono, fontSans } from '@/lib/font'
-import { AuthProvider } from '@/context/auth-context'
+import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth-options'
 import { Toaster } from 'sonner'
+
+import { AuthProvider } from '@/context/auth-context'
+import { authOptions } from '@/lib/auth-options'
+import { fontMono, fontSans } from '@/lib/font'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: {

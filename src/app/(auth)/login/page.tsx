@@ -1,4 +1,14 @@
+import { Metadata } from 'next'
+
 import LoginForm from '@/components/login-form'
+
+const title = 'Login'
+const description =
+  'Login to manage and track your intergalactic journeys with Spaceflow.'
+export const metadata: Metadata = {
+  title,
+  description,
+}
 
 const LoginPage = () => {
   return (

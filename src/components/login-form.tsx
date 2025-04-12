@@ -1,11 +1,18 @@
 'use client'
-import { Eye, EyeOff, Loader2, Rocket } from 'lucide-react'
+import { useState } from 'react'
 
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff, Loader2, Rocket } from 'lucide-react'
+import { signIn } from 'next-auth/react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+
 import { Icons } from '@/components/icons'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -14,13 +21,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import Link from 'next/link'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import { useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -32,8 +34,11 @@ const LoginForm = ({
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  const callbackUrl = searchParams.get('callbackUrl') || '/'
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,12 +62,13 @@ const LoginForm = ({
         form.reset()
         return
       }
-      router.push('/')
-      router.refresh()
+
       toast.success('Welcome to Spaceflow')
+
+      router.push(callbackUrl)
+      router.refresh()
     } catch (error) {
       toast.error('Something went wrong, Please try again')
-      console.error('Login error:', error)
     } finally {
       setIsLoading(false)
     }

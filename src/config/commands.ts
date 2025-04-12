@@ -7,7 +7,7 @@ export const commandConfig: CommandsConfig = {
       href: '/',
     },
     {
-      title: 'Explore',
+      title: 'Featured',
       href: '/#featured',
     },
     {

@@ -1,4 +1,15 @@
 'use client'
+import { MouseEvent, useEffect, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+import { format } from 'date-fns'
+import { CalendarIcon, Clock, Coffee } from 'lucide-react'
+import { Session } from 'next-auth'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Card,
   CardContent,
@@ -8,31 +19,22 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import { Space, TimeSlots } from '@/interfaces/space.interface'
-
-import { MouseEvent, useEffect, useState } from 'react'
-import { CalendarIcon, Clock, Coffee } from 'lucide-react'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
-import { Calendar } from '@/components/ui/calendar'
-import { getTimeslots } from '@/repo/spaces'
 import { useBooking } from '@/context/booking-context'
-import { Session } from 'next-auth'
-import { reserveRoom } from '@/repo/reservations'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { Space, TimeSlots } from '@/interfaces/space.interface'
+import { cn } from '@/lib/utils'
+import { createReservation } from '@/repo/reservations'
+import { getTimeslots } from '@/repo/spaces'
 
 const BookingMenu = ({
   space,
@@ -47,6 +49,21 @@ const BookingMenu = ({
   const [date, setDate] = useState<Date>()
   const [time, setTime] = useState('')
   const [timeslots, setTimeslots] = useState<TimeSlots[]>([])
+
+  const fromDate = new Date()
+
+  const closeHour = parseInt(space.closetime.slice(0, 2))
+  const closeMinute = parseInt(space.closetime.slice(2))
+  const currentHour = fromDate.getHours()
+  const currentMinute = fromDate.getMinutes()
+
+  if (
+    currentHour > closeHour ||
+    (currentHour === closeHour && currentMinute >= closeMinute)
+  ) {
+    fromDate.setDate(fromDate.getDate() + 1)
+    fromDate.setHours(0, 0, 0, 0)
+  }
 
   useEffect(() => {
     const fetchTimeSlots = async () => {
@@ -73,7 +90,7 @@ const BookingMenu = ({
         return
       }
 
-      const response = await reserveRoom(
+      const response = await createReservation(
         space._id,
         selectedRoom._id,
         date,
@@ -85,7 +102,7 @@ const BookingMenu = ({
         return
       }
       toast.success('Reserved! Enjoy')
-      router.push(`/reservations?_t=${new Date().getTime()}`)
+      router.push('/reservations')
     } catch (e) {
       if (e instanceof Error && e.message.includes('exceeded the maximum')) {
         toast.error('Exceeded the maximum number of reservations')
@@ -178,7 +195,7 @@ const BookingMenu = ({
                 mode='single'
                 selected={date}
                 onSelect={setDate}
-                fromDate={new Date()}
+                fromDate={fromDate}
                 initialFocus
                 required
               />
