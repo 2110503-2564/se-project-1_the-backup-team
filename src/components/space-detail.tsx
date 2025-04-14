@@ -122,7 +122,7 @@ const SpaceDetailClient = ({
               </TabsContent>
               <TabsContent value='reviews' className='mt-4'>
                 <div>
-                  {hasReservation ? (
+                  {hasReservation && (
                     hasReview ? (
                       <>
                         <p className='text-2xl font-bold mb-4'>Your review</p>
@@ -137,17 +137,19 @@ const SpaceDetailClient = ({
                     ) : (
                       <CreateReview space={space} />
                     )
-                  ) : (
-                    <div>
-                      You need to complete your reservation to review this space
-                    </div>
                   )}
-                  <p className='text-2xl font-bold mb-4'>Reviews & Rating</p>
+                  <p className='text-2xl font-bold my-4'>Reviews & Rating</p>
 
                   <div className='grid grid-cols-1 gap-2'>
-                    {reviews.map((review) => (
-                      <ReviewBox review={review} key={review._id} />
-                    ))}
+                    {
+                      reviews.length !== 0 ? 
+                        reviews.filter(r => r.userId._id !== session?.user._id).map((review) => (
+                          <ReviewBox review={review} key={review._id} />
+                        )) :
+                    <div>
+                      there is no review here
+                    </div>
+                    }
                   </div>
                 </div>
               </TabsContent>
