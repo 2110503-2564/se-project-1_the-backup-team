@@ -1,14 +1,103 @@
 'use client'
 
-import { formatDistanceToNow } from 'date-fns'
-import { Star } from 'lucide-react'
+import { formatDistanceToNow, set } from 'date-fns'
+import { Star, ArrowBigUp, ArrowBigDown } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Review } from '@/interfaces/review.interface'
+import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { voteReview } from '@/repo/reviews'
 
 import { Card, CardContent, CardHeader } from './ui/card'
 
 const ReviewBox = ({ review }: { review: Review }) => {
+
+  const { data: session } = useSession();
+  
+  const [userVotedUp, setUserVotedUp] = useState(false);
+  const [userVotedDown, setUserVotedDown] = useState(false);
+  const [votes, setVotes] = useState(review.upVote.length - review.downVote.length);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session?.user?._id) {
+      setUserVotedUp(review.upVote.includes(session.user._id));
+      setUserVotedDown(review.downVote.includes(session.user._id));
+    }
+  }, [session?.user?._id, review.upVote, review.downVote]);
+
+  const handleVote = async (isUpVote: boolean) => {
+    if (!session?.user?._id) {
+      toast.error('You must be logged in to vote')
+      return;
+      // TODO: redirect to login page
+    }
+  
+    let newUpVote = [...review.upVote];
+    let newDownVote = [...review.downVote];
+  
+    const userId = session.user._id;
+  
+    try {
+      if (isUpVote) {
+        if (userVotedUp) {
+          setUserVotedUp(false);
+          setVotes(v => v - 1);
+        } else {
+          if (userVotedDown) {
+            setUserVotedDown(false);
+            setVotes(v => v + 2);
+          } else {
+            setVotes(v => v + 1);
+          }
+          setUserVotedUp(true);
+        }
+      } else {
+        if (userVotedDown) {
+          setUserVotedDown(false);
+          setVotes(v => v + 1);
+        } else {
+          if (userVotedUp) {
+            setUserVotedUp(false);
+            setVotes(v => v - 2);
+          } else {
+            setVotes(v => v - 1);
+          }
+          setUserVotedDown(true);
+        }
+      }
+
+      // super logic
+      if (isUpVote) {
+        if (!newUpVote.includes(userId)) {
+          newUpVote.push(userId);
+        } else {
+          newUpVote = newUpVote.filter(id => id !== userId);
+        }
+        newDownVote = newDownVote.filter(id => id !== userId);
+      }
+      
+      if (!isUpVote) {
+        if (!newDownVote.includes(userId)) {
+          newDownVote.push(userId);
+        } else {
+          newDownVote = newDownVote.filter(id => id !== userId);
+        }
+        newUpVote = newUpVote.filter(id => id !== userId);
+      }
+      
+      await voteReview(review.spaceId, review._id, newUpVote, newDownVote, session?.accessToken || '');
+      // router.refresh()
+      } catch (e) {
+        if (e instanceof Error) toast.error(e.message)
+        else toast.error('Something went wrong')
+      }
+  }
+  
+  
   return (
     <>
       <Card className='w-full'>
@@ -41,13 +130,24 @@ const ReviewBox = ({ review }: { review: Review }) => {
                 </div>
               ))}
               <span className='ml-2 text-xs text-muted-foreground'>
-                {formatDistanceToNow(review.createdAt, { addSuffix: true })}
+                Edited {formatDistanceToNow(review.updatedAt, { addSuffix: true })}
               </span>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <p className='text-sm text-muted-foreground'>{review.comment}</p>
+          <div className='flex items-center gap-2'>
+            <ArrowBigUp
+              className={`h-4 w-4 cursor-pointer ${userVotedUp ? 'text-blue-500' : 'text-black'}`}
+              onClick={() => handleVote(true)}
+            />
+            <p className='text-sm text-muted-foreground'>{votes}</p>
+            <ArrowBigDown
+              className={`h-4 w-4 cursor-pointer ${userVotedDown ? 'text-red-500' : 'text-black'}`}
+              onClick={() => handleVote(false)}
+            />
+          </div>
         </CardContent>
       </Card>
     </>

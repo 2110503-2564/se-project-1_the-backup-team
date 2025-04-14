@@ -10,5 +10,6 @@ export interface Review {
   rating: number
   upVote: string[]
   downVote: string[]
-  createdAt: string
+  createdAt: string,
+  updatedAt: string
 }
