@@ -140,7 +140,8 @@ const SpaceDetailClient = ({
                   <p className='text-2xl font-bold my-4'>Reviews & Rating</p>
 
                   <div className='grid grid-cols-1 gap-2'>
-                    {(reviews.length !== 0 && reviews.find((r) => r.userId._id !== session?.user._id)) ? (
+                    {reviews.length !== 0 &&
+                    reviews.find((r) => r.userId._id !== session?.user._id) ? (
                       reviews
                         .filter((r) => r.userId._id !== session?.user._id)
                         .map((review) => (

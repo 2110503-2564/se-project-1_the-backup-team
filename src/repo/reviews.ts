@@ -1,5 +1,3 @@
-import { spawn } from 'child_process'
-
 import { APIResponse } from '@/interfaces/interface'
 import { Review } from '@/interfaces/review.interface'
 

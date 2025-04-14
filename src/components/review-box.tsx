@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
-
 import { formatDistanceToNow } from 'date-fns'
 import { Star, ArrowBigUp, ArrowBigDown } from 'lucide-react'
 import { useSession } from 'next-auth/react'
