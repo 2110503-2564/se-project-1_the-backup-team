@@ -1,6 +1,7 @@
+import { spawn } from 'child_process'
+
 import { APIResponse } from '@/interfaces/interface'
 import { Review } from '@/interfaces/review.interface'
-import { spawn } from 'child_process'
 
 export const createReview = (
   space: string,
@@ -64,7 +65,7 @@ export const voteReview = (
   reviewId: string,
   upVote: string[],
   downVote: string[],
-  token: string
+  token: string,
 ) => {
   return new Promise<APIResponse<Review>>(async (resolve, reject) => {
     try {
@@ -93,5 +94,3 @@ export const voteReview = (
     }
   })
 }
-
-
