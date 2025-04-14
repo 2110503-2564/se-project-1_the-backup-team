@@ -147,7 +147,7 @@ const SpaceDetailClient = ({
                           <ReviewBox review={review} key={review._id} />
                         ))
                     ) : (
-                      <div>there is no review here</div>
+                      <div>there is no other review here</div>
                     )}
                   </div>
                 </div>
