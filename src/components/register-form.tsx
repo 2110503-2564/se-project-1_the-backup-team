@@ -1,17 +1,17 @@
 'use client'
 
 import React, { useState } from 'react'
+
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { signIn } from 'next-auth/react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
-import { Input } from '@/components/ui/input'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,15 +21,18 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import Link from 'next/link'
-import { toast } from 'sonner'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { registerUser } from '@/repo/users'
-import { useRouter } from 'next/navigation'
 
 const formSchema = z
   .object({
@@ -44,7 +47,7 @@ const formSchema = z
     }),
     phone: z
       .string()
-      .transform((val) => val.replace(/\D/g, '')) // Strip non-digit characters
+      .transform((val) => val.replace(/\D/g, ''))
       .refine((val) => val.length === 10, {
         message: 'Phone number must be exactly 10 digits.',
       }),
@@ -99,19 +102,36 @@ const RegisterForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     try {
-      const response = await registerUser({
+      const registrationResponse = await registerUser({
         name: `${values.firstName} ${values.lastName}`,
         email: values.email,
         password: values.password,
         phone: values.phone,
         role: 'user',
       })
+      if (!registrationResponse.success) {
+        throw new Error()
+      }
 
-      toast.success('Registration successfully')
+      const response = await signIn('password', {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      })
+
+      if (response?.error) {
+        toast.error(
+          "Registration successful but couldn't sign in automatically",
+        )
+        router.push('/login')
+        return
+      }
+
       router.push('/')
+      router.refresh()
+      toast.success('Account created successfully')
     } catch (error) {
       toast.error('Registration failed')
-      console.error('Registration failed:', error)
     } finally {
       setIsLoading(false)
     }

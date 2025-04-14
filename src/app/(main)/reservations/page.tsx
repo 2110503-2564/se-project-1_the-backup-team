@@ -1,35 +1,31 @@
-import { Suspense } from 'react'
-import ReservationsClient from '@/components/reservations'
-import ReservationsSkeleton from '@/components/reservations-skeleton'
-
-import { fetchReservationsByUser } from '@/repo/reservations'
-import { ReservationFilterParams } from '@/types/reservations-filter'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth-options'
 
-const ReservationsPage = async ({
-  searchParams,
-}: {
-  searchParams: ReservationFilterParams
+import ReservationsView from '@/components/reservations'
+import { ReservationsPageParams } from '@/interfaces/interface'
+import { authOptions } from '@/lib/auth-options'
+import { fetchReservations } from '@/repo/reservations'
+import { sortParams } from '@/types/types'
+
+const ReservationsPage = async (props: {
+  searchParams: Promise<ReservationsPageParams>
 }) => {
-  const sort = searchParams.sort || 'date-asc'
+  const searchParams = await props.searchParams
+  const sort = (searchParams.sort as sortParams) || 'date-desc'
   const session = await getServerSession(authOptions)
 
-  const reservations = await fetchReservationsByUser(
-    session?.accessToken || '',
-    {
-      sort,
-    },
-  )
+  if (!session?.accessToken)
+    return (
+      <div className='p-8 text-center'>
+        Please log in to view your reservations
+      </div>
+    )
+
+  const reservations = await fetchReservations(session.accessToken, sort)
 
   return (
-    <Suspense fallback={<ReservationsSkeleton />}>
-      <ReservationsClient
-        initialReservations={reservations}
-        initialSort={sort}
-        session={session}
-      />
-    </Suspense>
+    <div className='flex flex-col gap-6'>
+      <ReservationsView reservations={reservations} />
+    </div>
   )
 }
 

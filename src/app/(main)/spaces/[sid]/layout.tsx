@@ -1,5 +1,6 @@
-import { BookingProvider } from '@/context/booking-context'
 import { Metadata } from 'next'
+
+import { BookingProvider } from '@/context/booking-context'
 
 export const metadata: Metadata = {
   title: 'Space Details',

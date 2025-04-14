@@ -1,3 +1,9 @@
+import Link from 'next/link'
+
+import { Metadata } from 'next'
+import { getServerSession } from 'next-auth'
+
+import AdminPanel from '@/components/admin-panel'
 import {
   PageActions,
   PageHeader,
@@ -5,8 +11,8 @@ import {
   PageHeaderHeading,
 } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { Metadata } from 'next'
-import Link from 'next/link'
+import { AdminCursorProvider } from '@/context/admin-cursor'
+import { authOptions } from '@/lib/auth-options'
 
 const title = 'Finding your spaces'
 const description =
@@ -16,9 +22,11 @@ export const metadata: Metadata = {
   description,
 }
 
-const SpacesLayout = ({ children }: { children: React.ReactNode }) => {
+const SpacesLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await getServerSession(authOptions)
+
   return (
-    <>
+    <AdminCursorProvider>
       <PageHeader>
         <PageHeaderHeading>{title}</PageHeaderHeading>
         <PageHeaderDescription>{description}</PageHeaderDescription>
@@ -38,7 +46,8 @@ const SpacesLayout = ({ children }: { children: React.ReactNode }) => {
           </section>
         </div>
       </div>
-    </>
+      {session?.user.role == 'admin' && <AdminPanel />}
+    </AdminCursorProvider>
   )
 }
 

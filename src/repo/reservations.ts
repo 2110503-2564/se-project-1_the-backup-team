@@ -1,62 +1,38 @@
+import { APIResponse } from '@/interfaces/interface'
 import {
   Reservation,
   ReservationResponse,
 } from '@/interfaces/reservation.interface'
-import { APIResponse } from '@/interfaces/interface'
-import { ReservationFilterParams } from '@/types/reservations-filter'
+import { sortParams } from '@/types/types'
 
-/*  currently using mockup data
- *  TODO: Implement Backend API Usage
- */
-
-export const fetchReservations = () => {
-  return new Promise<Reservation[]>(async (resolve, reject) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations`,
-      )
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Fetch failed')
-      }
-
-      const body = await response.json()
-
-      resolve(body.data as Reservation[])
-    } catch (error) {
-      reject(
-        error instanceof Error ? error : new Error('Fetch reservation failed'),
-      )
-    }
-  })
-}
-
-export const fetchReservationsByUser = (
+export const fetchReservations = (
   token: string,
-  filters: ReservationFilterParams = {},
+  sort: sortParams = 'date-desc',
 ) => {
-  return new Promise<Reservation[]>(async (resolve, reject) => {
+  return new Promise<Reservation[]>(async (resolve, _) => {
     try {
+      const queryParams = new URLSearchParams()
+      queryParams.append('sort', sort)
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations?sort=${filters.sort}`,
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          cache: 'no-store',
         },
       )
+
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Fetch failed')
+        throw new Error('Failed to fetch reservations')
       }
 
       const body = await response.json()
+
       resolve(body.data as Reservation[])
     } catch (e) {
-      reject(e instanceof Error ? e : new Error('Failed to fetch'))
+      resolve([] as Reservation[])
     }
   })
 }
@@ -87,7 +63,7 @@ export const deleteReservation = (reservation: string, token: string) => {
   })
 }
 
-export const reserveRoom = (
+export const createReservation = (
   space: string,
   room: string,
   date: Date,
@@ -97,14 +73,12 @@ export const reserveRoom = (
   return new Promise<APIResponse<ReservationResponse>>(
     async (resolve, reject) => {
       try {
-        date = new Date(date)
         const hours = parseInt(time.substring(0, 2))
         const minutes = parseInt(time.substring(3, 5))
 
+        date = new Date(date)
         date.setHours(hours)
         date.setMinutes(minutes)
-        date.setSeconds(0)
-        date.setMilliseconds(0)
 
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${space}/reservations`,
@@ -124,13 +98,56 @@ export const reserveRoom = (
 
         if (!response.ok) {
           const error = await response.json()
-          throw new Error(error.message || 'Failed to reserver')
+          throw new Error(error.message || 'Failed to reserve')
         }
 
         const body = await response.json()
         resolve(body as APIResponse<ReservationResponse>)
       } catch (e) {
         reject(e instanceof Error ? e : 'Failed to reserve')
+      }
+    },
+  )
+}
+
+export const updateReservation = (
+  reservation_id: string,
+  date: Date,
+  time: string,
+  token: string,
+) => {
+  return new Promise<APIResponse<ReservationResponse>>(
+    async (resolve, reject) => {
+      try {
+        const hours = parseInt(time.substring(0, 2))
+        const minutes = parseInt(time.substring(3, 5))
+
+        date = new Date(date)
+        date.setHours(hours)
+        date.setMinutes(minutes)
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations/${reservation_id}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              reservationDate: date.toISOString(),
+            }),
+          },
+        )
+
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.message || 'Failed to update')
+        }
+        const body = await response.json()
+        resolve(body as APIResponse<ReservationResponse>)
+      } catch (e) {
+        reject(e instanceof Error ? e : 'Failed to update')
       }
     },
   )

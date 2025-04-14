@@ -1,7 +1,8 @@
 'use client'
 
-import { Room } from '@/interfaces/space.interface'
 import { createContext, useContext, useState } from 'react'
+
+import { Room } from '@/interfaces/space.interface'
 
 type BookingContextType = {
   selectedRoom: Room | undefined

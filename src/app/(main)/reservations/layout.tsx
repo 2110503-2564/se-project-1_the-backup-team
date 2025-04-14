@@ -1,3 +1,8 @@
+import Link from 'next/link'
+
+import { Plus } from 'lucide-react'
+import { Metadata } from 'next'
+
 import {
   PageActions,
   PageHeader,
@@ -5,9 +10,6 @@ import {
   PageHeaderHeading,
 } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-import { Metadata } from 'next'
-import Link from 'next/link'
 
 const title = 'My Reservations'
 const description = 'View and manage your space reservations'

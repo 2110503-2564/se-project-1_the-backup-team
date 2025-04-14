@@ -1,3 +1,7 @@
+import Link from 'next/link'
+
+import { Metadata } from 'next'
+
 import {
   PageActions,
   PageHeader,
@@ -5,8 +9,6 @@ import {
   PageHeaderHeading,
 } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { Metadata } from 'next'
-import Link from 'next/link'
 
 const title = 'Privacy Policy'
 const description =

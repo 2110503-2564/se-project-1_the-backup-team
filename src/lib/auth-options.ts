@@ -1,10 +1,10 @@
-import { UserRole } from '@/interfaces/user.interface'
-import { authenticateUser } from '@/repo/users'
 import { AuthOptions } from 'next-auth'
-
 import CredentialsProvider, {
   CredentialsConfig,
 } from 'next-auth/providers/credentials'
+
+import { UserRole } from '@/interfaces/user.interface'
+import { authenticateUser } from '@/repo/users'
 
 const credentialsProviderConfig: CredentialsConfig = {
   name: 'Credentials',
@@ -18,7 +18,7 @@ const credentialsProviderConfig: CredentialsConfig = {
     },
     password: { label: 'Password', type: 'password' },
   },
-  async authorize(credentials, req) {
+  async authorize(credentials, _) {
     if (!credentials) return null
     try {
       const response = await authenticateUser(
@@ -34,8 +34,8 @@ const credentialsProviderConfig: CredentialsConfig = {
           ...userData,
         }
       }
-    } catch (error) {
-      console.error('Authentication error:', error)
+    } catch (_) {
+      return null
     }
     return null
   },

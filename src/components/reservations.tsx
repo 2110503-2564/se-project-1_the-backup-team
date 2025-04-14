@@ -1,118 +1,53 @@
 'use client'
+import { Suspense, useState } from 'react'
 
+import { Filter } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+
+import GridReservations from '@/components/grid-reservations'
 import ListReservations from '@/components/list-reservations'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Filter, Grip, List } from 'lucide-react'
-import { useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { Reservation } from '@/interfaces/reservation.interface'
+import { ReservationLayout } from '@/types/types'
 
-import GridReservations from './grid-reservations'
-import { ReservationsClientProps } from '@/interfaces/interface'
-import { ReservationFilterParams } from '@/types/reservations-filter'
+import ReservationsFilter from './reservations-filter'
+import ReservationsLayoutSwitcher from './reservations-layout-switcher'
+import ReservationsSkeleton from './reservations-skeleton'
 
-const ReservationsClient = ({
-  initialReservations,
-  initialSort,
-  session,
-}: ReservationsClientProps) => {
-  const router = useRouter()
-  const pathname = usePathname()
-
-  const [layout, setLayout] = useState<'list' | 'grid'>('grid')
-
-  const updateFilters = (filters: Partial<ReservationFilterParams>) => {
-    const params = new URLSearchParams()
-
-    if (initialSort !== 'date-desc') params.set('sort', initialSort)
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value && value !== 'date-desc') {
-        params.set(key, value)
-      } else {
-        params.delete(key)
-      }
-    })
-
-    const queryString = params.toString() ? `?${params.toString()}` : ''
-    router.push(`${pathname}${queryString}`)
-    router.refresh()
-  }
+const ReservationsView = ({
+  reservations,
+}: {
+  reservations: Reservation[]
+}) => {
+  const [layout, setLayout] = useState<ReservationLayout>('grid')
+  const { data: session } = useSession()
 
   return (
-    <div className='flex flex-col gap-6'>
+    <>
       <div className='flex flex-col justify-end sm:flex-row gap-4'>
         <div className='flex gap-2'>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <div>
-                <Button variant='outline' size='icon'>
-                  <Filter className='h-4 w-4' />
-                </Button>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end' className='w-[200px]'>
-              <DropdownMenuLabel>Filter By</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => updateFilters({ sort: 'date-desc' })}
-              >
-                Date Descending
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => updateFilters({ sort: 'date-asc' })}
-              >
-                Date Ascending
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => updateFilters({ sort: 'price-desc' })}
-              >
-                Price (High to low)
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => updateFilters({ sort: 'price-asc' })}
-              >
-                Price (Low to high)
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <div className='flex rounded-md'>
-            <Button
-              variant={layout === 'list' ? 'default' : 'outline'}
-              size='icon'
-              className='rounded-r-none'
-              onClick={() => setLayout('list')}
-            >
-              <List className='h-4 w-4' />
-            </Button>
-            <Button
-              variant={layout === 'grid' ? 'default' : 'outline'}
-              size='icon'
-              className='rounded-l-none'
-              onClick={() => setLayout('grid')}
-            >
-              <Grip className='h-4 w-4' />
-            </Button>
-          </div>
+          <ReservationsFilter>
+            <div>
+              <Button variant='outline' size='icon'>
+                <Filter className='h-4 w-4' />
+              </Button>
+            </div>
+          </ReservationsFilter>
+          <ReservationsLayoutSwitcher
+            layout={layout}
+            onLayoutChange={setLayout}
+          />
         </div>
       </div>
-      {layout === 'grid' ? (
-        <GridReservations reservations={initialReservations} />
-      ) : (
-        <ListReservations
-          reservations={initialReservations}
-          session={session}
-        />
-      )}
-    </div>
+      <Suspense fallback={<ReservationsSkeleton />}>
+        {layout === 'grid' ? (
+          <GridReservations reservations={reservations} session={session} />
+        ) : (
+          <ListReservations reservations={reservations} session={session} />
+        )}
+      </Suspense>
+    </>
   )
 }
 
-export default ReservationsClient
+export default ReservationsView

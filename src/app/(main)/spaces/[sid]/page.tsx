@@ -1,19 +1,32 @@
+import { getServerSession } from 'next-auth'
+
+import NotFound from '@/components/not-found'
 import SpaceDetailClient from '@/components/space-detail'
+import { authOptions } from '@/lib/auth-options'
+import { fetchReservations } from '@/repo/reservations'
+import { getReviews } from '@/repo/reviews'
 import { getSpaceById } from '@/repo/spaces'
 
 const SpacePage = async ({ params }: { params: { sid: string } }) => {
-  let space
-  try {
-    space = await getSpaceById(params.sid)
-  } catch (_) {
-    return (
-      <div className='container py-24 text-center text-lg font-semibold'>
-        Space not found
-      </div>
-    )
-  }
+  const session = await getServerSession(authOptions)
 
-  return <SpaceDetailClient space={space} />
+  try {
+    const space = await getSpaceById(params.sid)
+    if (!space) throw new Error()
+
+    const reservation = await fetchReservations(session?.accessToken || '')
+    const reviews = await getReviews(params.sid)
+
+    return (
+      <SpaceDetailClient
+        space={space}
+        reservations={reservation}
+        reviews={reviews.data}
+      />
+    )
+  } catch (_) {
+    return <NotFound message='Unable to load this space' retryPath='/spaces' />
+  }
 }
 
 export default SpacePage

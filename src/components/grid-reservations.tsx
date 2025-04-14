@@ -1,17 +1,22 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Calendar, Clock, User } from 'lucide-react'
-import ReservationActions from '@/components/reservation-actions'
-
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+
 import { format } from 'date-fns'
+import { Calendar, Clock, User } from 'lucide-react'
+import { Session } from 'next-auth'
+
+import ReservationActions from '@/components/reservation-actions'
+import StatusBadge from '@/components/status-badge'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Card, CardContent } from '@/components/ui/card'
 import { Reservation } from '@/interfaces/reservation.interface'
 
 const GridReservations = ({
   reservations,
+  session,
 }: {
   reservations: Reservation[]
+  session: Session | null
 }) => {
   return (
     <div className='flex flex-col gap-8'>
@@ -30,14 +35,20 @@ const GridReservations = ({
                 <AspectRatio ratio={16 / 9}>
                   <Image
                     src={
-                      reservation.space.image
-                        ? `/spaces${reservation.space.image}`
+                      reservation.room.image
+                        ? `/spaces${reservation.room.image}`
                         : '/spaces/placehold.jpg'
                     }
                     alt='Card Image'
                     fill
                     className='rounded-t-md object-cover'
                   />
+                  <div className='absolute right-3 bottom-3'>
+                    <StatusBadge
+                      status={reservation.status}
+                      className='w-fit font-bold text-xs'
+                    />
+                  </div>
                 </AspectRatio>
               </div>
               <CardContent className='space-y-4'>
@@ -51,19 +62,17 @@ const GridReservations = ({
                     </p>
                   </Link>
 
-                  <ReservationActions
-                    reservation={reservation}
-                    space={reservation.space}
-                    space_id={reservation.space._id}
-                    reservation_id={reservation._id}
-                  />
+                  <ReservationActions reservation={reservation} />
                 </div>
+
                 <div className='mt-4 pt-4 flex justify-between items-end'>
                   <div className='text-sm text-muted-foreground'>
-                    <div className='flex gap-2 items-center'>
-                      <User className='w-4 h-4' />
-                      {reservation.user.name}
-                    </div>
+                    {session?.user.role === 'admin' && (
+                      <div className='flex gap-2 items-center'>
+                        <User className='w-4 h-4' />
+                        {reservation.user.name}
+                      </div>
+                    )}
                     <div className='flex gap-2 items-center'>
                       <Calendar className='w-4 h-4' />
                       {format(reservation.reservationDate, 'MMM d, yyyy')}

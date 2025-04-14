@@ -4,7 +4,7 @@ const SiteFooter = () => {
       <div className='container-wrapper'>
         <div className='container py-4 items-center'>
           <div className='text-center text-sm leading-loose text-muted-foreground'>
-            Made with 🤍 | Team Blackened
+            Made with 🤍 | The Backup Team
           </div>
         </div>
       </div>

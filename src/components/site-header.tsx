@@ -1,9 +1,12 @@
 import React from 'react'
-import MainNav from './main-nav'
-import LoginMenu from './login-menu'
-import CommandMenu from './command-menu'
+
 import { getServerSession } from 'next-auth'
+
 import { authOptions } from '@/lib/auth-options'
+
+import CommandMenu from './command-menu'
+import LoginMenu from './login-menu'
+import MainNav from './main-nav'
 
 const SiteHeader = async () => {
   const session = await getServerSession(authOptions)
