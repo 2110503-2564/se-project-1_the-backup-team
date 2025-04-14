@@ -1,4 +1,6 @@
 'use client'
+import { useMemo } from 'react'
+
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -26,18 +28,45 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useBooking } from '@/context/booking-context'
+import { Reservation } from '@/interfaces/reservation.interface'
+import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
 
 import BookingMenuSkeleton from './booking-menu-skeleton'
+import CreateReview from './create-review'
+import ReviewBox from './review-box'
 
 const BookingMenu = dynamic(() => import('@/components/booking-menu'), {
   loading: () => <BookingMenuSkeleton />,
   ssr: false,
 })
 
-const SpaceDetailClient = ({ space }: { space: Space }) => {
+const SpaceDetailClient = ({
+  space,
+  reservations,
+  reviews,
+}: {
+  space: Space
+  reservations: Reservation[]
+  reviews: Review[]
+}) => {
   const { setSelectedRoom } = useBooking()
   const { data: session } = useSession()
+
+  const hasReservation = useMemo(() => {
+    if (!session?.user._id) return false
+
+    return reservations.some(
+      (reservation) =>
+        reservation.user._id === session.user._id &&
+        reservation.status === 'completed' &&
+        reservation.space._id === space._id,
+    )
+  }, [session, reservations, space._id])
+
+  const hasReview = reviews.some(
+    (review) => review.userId._id === session?.user._id,
+  )
 
   return (
     <section id='booking'>
@@ -92,7 +121,35 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                 </div>
               </TabsContent>
               <TabsContent value='reviews' className='mt-4'>
-                <p>Reviews coming soon.</p>
+                <div>
+                  {hasReservation ? (
+                    hasReview ? (
+                      <>
+                        <p className='text-2xl font-bold mb-4'>Your review</p>
+                        <ReviewBox
+                          review={
+                            reviews.find(
+                              (r) => r.userId._id === session?.user._id,
+                            )!
+                          }
+                        />
+                      </>
+                    ) : (
+                      <CreateReview space={space} />
+                    )
+                  ) : (
+                    <div>
+                      You need to complete your reservation to review this space
+                    </div>
+                  )}
+                  <p className='text-2xl font-bold mb-4'>Reviews & Rating</p>
+
+                  <div className='grid grid-cols-1 gap-2'>
+                    {reviews.map((review) => (
+                      <ReviewBox review={review} key={review._id} />
+                    ))}
+                  </div>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
