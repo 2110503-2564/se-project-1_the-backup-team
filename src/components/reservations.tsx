@@ -1,5 +1,5 @@
 'use client'
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 
 import { Filter } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -21,10 +21,32 @@ const ReservationsView = ({
 }) => {
   const [layout, setLayout] = useState<ReservationLayout>('grid')
   const { data: session } = useSession()
+  const [isActive, setIsActive] = useState(false)
+  const activeReservations = reservations.filter(
+    (res) => res.status === 'active',
+  )
+
+  useEffect(() => {
+    const stored = localStorage.getItem('isActive')
+    if (stored === 'true') {
+      setIsActive(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('isActive', isActive.toString())
+  }, [isActive])
 
   return (
     <>
-      <div className='flex flex-col justify-end sm:flex-row gap-4'>
+      <div className='flex flex-col justify-between sm:flex-row gap-4'>
+        <Button
+          variant='outline'
+          className={`w-20 h-8 ${isActive ? 'bg-black text-white' : ''}`}
+          onClick={() => setIsActive(!isActive)}
+        >
+          History
+        </Button>
         <div className='flex gap-2'>
           <ReservationsFilter>
             <div>
@@ -41,7 +63,19 @@ const ReservationsView = ({
       </div>
       <Suspense fallback={<ReservationsSkeleton />}>
         {layout === 'grid' ? (
-          <GridReservations reservations={reservations} session={session} />
+          !isActive ? (
+            <GridReservations
+              reservations={activeReservations}
+              session={session}
+            />
+          ) : (
+            <GridReservations reservations={reservations} session={session} />
+          )
+        ) : !isActive ? (
+          <ListReservations
+            reservations={activeReservations}
+            session={session}
+          />
         ) : (
           <ListReservations reservations={reservations} session={session} />
         )}
