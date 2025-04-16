@@ -92,3 +92,33 @@ export const voteReview = (
     }
   })
 }
+export const deleteReview = (
+  spaceId: string,
+  reviewId: string,
+  token: string,
+) => {
+  return new Promise<APIResponse<null>>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${spaceId}/reviews/${reviewId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          cache: 'no-store',
+        },
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to delete review')
+      }
+
+      resolve({ success: true, data: null })
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error('Failed to delete review'))
+    }
+  })
+}
