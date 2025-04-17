@@ -1,7 +1,10 @@
 'use client'
 
 import { MouseEvent } from 'react'
+
 import { useRouter } from 'next/navigation'
+
+import { Edit, Trash, MoreHorizontalIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -12,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Edit, Trash ,MoreHorizontalIcon } from 'lucide-react'
 import { deleteReview } from '@/repo/reviews'
 import { useEditModal } from '@/context/edited-status'
 
@@ -54,7 +56,7 @@ const ReviewActions = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' size='icon'>
-        <MoreHorizontalIcon className='h-4 w-4' />
+          <MoreHorizontalIcon className='h-4 w-4' />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -66,10 +68,7 @@ const ReviewActions = ({
           Edit
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className='text-red-600'
-          onClick={handleDelete}
-        >
+        <DropdownMenuItem className='text-red-600' onClick={handleDelete}>
           <Trash className='mr-2 h-4 w-4 text-red-600' />
           Delete
         </DropdownMenuItem>
