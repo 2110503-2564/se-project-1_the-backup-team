@@ -58,40 +58,40 @@ export const getReviews = (space: string) => {
   })
 }
 
-export const voteReview = (
-  spaceId: string,
-  reviewId: string,
-  upVote: string[],
-  downVote: string[],
-  token: string,
-) => {
-  return new Promise<APIResponse<Review>>(async (resolve, reject) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${spaceId}/reviews/${reviewId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ upVote, downVote }),
-          cache: 'no-store',
-        },
-      )
+// export const voteReview = (
+//   spaceId: string,
+//   reviewId: string,
+//   upVote: string[],
+//   downVote: string[],
+//   token: string,
+// ) => {
+//   return new Promise<APIResponse<Review>>(async (resolve, reject) => {
+//     try {
+//       const response = await fetch(
+//         `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${spaceId}/reviews/${reviewId}`,
+//         {
+//           method: 'PUT',
+//           headers: {
+//             'Content-Type': 'application/json',
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({ upVote, downVote }),
+//           cache: 'no-store',
+//         },
+//       )
 
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Failed to vote review')
-      }
+//       if (!response.ok) {
+//         const error = await response.json()
+//         throw new Error(error.message || 'Failed to vote review')
+//       }
 
-      const body = await response.json()
-      resolve(body as APIResponse<Review>)
-    } catch (e) {
-      reject(e instanceof Error ? e : new Error('Failed to vote review'))
-    }
-  })
-}
+//       const body = await response.json()
+//       resolve(body as APIResponse<Review>)
+//     } catch (e) {
+//       reject(e instanceof Error ? e : new Error('Failed to vote review'))
+//     }
+//   })
+// }
 export const deleteReview = (
   spaceId: string,
   reviewId: string,
@@ -119,6 +119,68 @@ export const deleteReview = (
       resolve({ success: true, data: null })
     } catch (e) {
       reject(e instanceof Error ? e : new Error('Failed to delete review'))
+    }
+  })
+}
+
+export const upvoteReview = (
+  spaceId: string,
+  reviewId: string,
+  token: string,
+) => {
+  return new Promise<APIResponse<null>>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${spaceId}/reviews/${reviewId}/upvote`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          cache: 'no-store',
+        },
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to upvote review')
+      }
+
+      resolve({ success: true, data: null })
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error('Failed to upvote review'))
+    }
+  })
+}
+
+export const downvoteReview = (
+  spaceId: string,
+  reviewId: string,
+  token: string,
+) => {
+  return new Promise<APIResponse<null>>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${spaceId}/reviews/${reviewId}/downvote`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          cache: 'no-store',
+        },
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to downvote review')
+      }
+
+      resolve({ success: true, data: null })
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error('Failed to downvote review'))
     }
   })
 }
