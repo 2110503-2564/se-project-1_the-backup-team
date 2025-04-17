@@ -142,7 +142,7 @@ const SpaceDetailClient = ({
               </TabsContent>
               <TabsContent value='reviews' className='mt-4'>
                 <div>
-                  {hasReservation &&
+                  {hasReservation ?
                     (hasReview ? (
                       (isEdit ? (
                         <>

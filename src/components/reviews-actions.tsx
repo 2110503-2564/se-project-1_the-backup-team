@@ -56,7 +56,7 @@ const ReviewActions = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' size='icon'>
-          <MoreHorizontalIcon className='h-4 w-4' />
+          <MoreHorizontalIcon className='h-5 w-5' />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
