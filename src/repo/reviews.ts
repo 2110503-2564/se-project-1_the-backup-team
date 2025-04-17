@@ -58,6 +58,41 @@ export const getReviews = (space: string) => {
   })
 }
 
+export const updateReview = (
+  spaceId: string,
+  reviewId: string,
+  comment: string,
+  rating: number,
+  token: string
+) => {
+  return new Promise<APIResponse<Review>>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${spaceId}/reviews/${reviewId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ comment, rating }),
+          cache: 'no-store',
+        },
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to update review')
+      }
+
+      const body = await response.json()
+      resolve(body as APIResponse<Review>)
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error('Failed to update review'))
+    }
+  })
+}
+
 export const voteReview = (
   spaceId: string,
   reviewId: string,
@@ -92,6 +127,7 @@ export const voteReview = (
     }
   })
 }
+
 export const deleteReview = (
   spaceId: string,
   reviewId: string,

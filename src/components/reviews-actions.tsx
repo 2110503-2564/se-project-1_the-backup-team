@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Edit, Trash ,MoreHorizontalIcon } from 'lucide-react'
 import { deleteReview } from '@/repo/reviews'
+import { useEditModal } from '@/context/edited-status'
 
 const ReviewActions = ({
   spaceId,
@@ -25,6 +26,11 @@ const ReviewActions = ({
   token: string
 }) => {
   const router = useRouter()
+  const { openModal } = useEditModal()
+
+  const handleEdit = async (e: MouseEvent<HTMLDivElement>) => {
+    openModal();
+  }
 
   const handleDelete = async (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -51,7 +57,10 @@ const ReviewActions = ({
         <MoreHorizontalIcon className='h-4 w-4' />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent
+        align='end'
+        onClick={handleEdit}
+      >
         <DropdownMenuItem>
           <Edit className='mr-2 h-4 w-4' />
           Edit
