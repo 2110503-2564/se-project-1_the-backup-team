@@ -31,6 +31,7 @@ import { useBooking } from '@/context/booking-context'
 import { Reservation } from '@/interfaces/reservation.interface'
 import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
+import { Star } from 'lucide-react'
 
 import BookingMenuSkeleton from './booking-menu-skeleton'
 import CreateReview from './create-review'
@@ -68,6 +69,10 @@ const SpaceDetailClient = ({
     (review) => review.userId._id === session?.user._id,
   )
 
+  const averageRating = reviews.length > 0 ? (
+    reviews.reduce((sum , review) => sum + review.rating, 0) / reviews.length
+  ).toFixed(1) : null
+
   return (
     <section id='booking'>
       <Button variant='ghost' size='sm' asChild className='mb-6'>
@@ -99,6 +104,14 @@ const SpaceDetailClient = ({
                   <MapPin className='h-4 w-4 mr-1' />
                   <span>{`${space.address}, ${space.district}, ${space.province}`}</span>
                 </div>
+                <div className='flex items-center mt-2 text-muted-foreground'>
+                  {
+                    averageRating && 
+                    <div className='flex flex-row items-center gap-1'>
+                      {averageRating} <Star className='h-4 w-4 fill-yellow-400 text-yellow-400'/>
+                    </div>
+                  }
+                </div>
               </div>
             </div>
             <Separator className='my-6' />
@@ -122,8 +135,8 @@ const SpaceDetailClient = ({
               </TabsContent>
               <TabsContent value='reviews' className='mt-4'>
                 <div>
-                  {hasReservation &&
-                    (hasReview ? (
+                  {
+                    hasReservation ? (hasReview ? (
                       <>
                         <p className='text-2xl font-bold mb-4'>Your review</p>
                         <ReviewBox
@@ -136,7 +149,8 @@ const SpaceDetailClient = ({
                       </>
                     ) : (
                       <CreateReview space={space} />
-                    ))}
+                    )) : <p>You need to completed your reservation to leave review</p>
+                  }
                   <p className='text-2xl font-bold my-4'>Reviews & Rating</p>
 
                   <div className='grid grid-cols-1 gap-2'>
