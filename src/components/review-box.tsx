@@ -30,7 +30,10 @@ const ReviewBox = ({ review }: { review: Review }) => {
     }
   }, [session?.user?._id, review.upVote, review.downVote])
 
-  const handleVote = async (option: {isUpVote?: boolean, isDownVote?: boolean}) => {
+  const handleVote = async (option: {
+    isUpVote?: boolean
+    isDownVote?: boolean
+  }) => {
     if (!session?.user?._id) {
       toast.error('You must be logged in to vote')
       return
@@ -129,12 +132,12 @@ const ReviewBox = ({ review }: { review: Review }) => {
           <div className='flex items-center gap-2'>
             <ArrowBigUp
               className={`h-4 w-4 cursor-pointer ${userVotedUp ? 'text-blue-500' : 'text-black'}`}
-              onClick={() => handleVote({isUpVote: true})}
+              onClick={() => handleVote({ isUpVote: true })}
             />
             <p className='text-sm text-muted-foreground'>{votes}</p>
             <ArrowBigDown
               className={`h-4 w-4 cursor-pointer ${userVotedDown ? 'text-red-500' : 'text-black'}`}
-              onClick={() => handleVote({isDownVote: true})}
+              onClick={() => handleVote({ isDownVote: true })}
             />
           </div>
         </CardContent>
