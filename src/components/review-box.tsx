@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { formatDistanceToNow } from 'date-fns'
 import { Star, ArrowBigUp, ArrowBigDown } from 'lucide-react'
@@ -22,6 +22,8 @@ const ReviewBox = ({ review }: { review: Review }) => {
   const [votes, setVotes] = useState(
     review.upVote.length - review.downVote.length,
   )
+  const upVoteArray = useRef([...review.upVote])
+  const downVoteArray = useRef([...review.downVote])
   // const router = useRouter()
 
   useEffect(() => {
@@ -37,9 +39,6 @@ const ReviewBox = ({ review }: { review: Review }) => {
       return
       // TODO: redirect to login page
     }
-
-    let newUpVote = [...review.upVote]
-    let newDownVote = [...review.downVote]
 
     const userId = session.user._id
 
@@ -74,28 +73,34 @@ const ReviewBox = ({ review }: { review: Review }) => {
 
       // super logic
       if (isUpVote) {
-        if (!newUpVote.includes(userId)) {
-          newUpVote.push(userId)
+        if (!upVoteArray.current.includes(userId)) {
+          upVoteArray.current.push(userId)
         } else {
-          newUpVote = newUpVote.filter((id) => id !== userId)
+          upVoteArray.current = upVoteArray.current.filter(
+            (id) => id !== userId,
+          )
         }
-        newDownVote = newDownVote.filter((id) => id !== userId)
+        downVoteArray.current = downVoteArray.current.filter(
+          (id) => id !== userId,
+        )
       }
 
       if (!isUpVote) {
-        if (!newDownVote.includes(userId)) {
-          newDownVote.push(userId)
+        if (!downVoteArray.current.includes(userId)) {
+          downVoteArray.current.push(userId)
         } else {
-          newDownVote = newDownVote.filter((id) => id !== userId)
+          downVoteArray.current = downVoteArray.current.filter(
+            (id) => id !== userId,
+          )
         }
-        newUpVote = newUpVote.filter((id) => id !== userId)
+        upVoteArray.current = upVoteArray.current.filter((id) => id !== userId)
       }
 
       await voteReview(
         review.spaceId,
         review._id,
-        newUpVote,
-        newDownVote,
+        upVoteArray.current,
+        downVoteArray.current,
         session?.accessToken || '',
       )
       // router.refresh()
