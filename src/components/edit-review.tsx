@@ -16,7 +16,7 @@ import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
 import { useEditModal } from '@/context/edited-status'
 
-const EditReview = ({ space, review }: { space:Space, review: Review}) => {
+const EditReview = ({ space, review }: { space: Space, review: Review }) => {
   const { data: session } = useSession()
   const { closeModal } = useEditModal()
   const [comment, setReview] = useState(review.comment)
@@ -45,7 +45,7 @@ const EditReview = ({ space, review }: { space:Space, review: Review}) => {
   return (
     <div className='space-y-4'>
       <h2 className='text-xl font-bold'>Edit Your Review</h2>
-
+      editing
       <div className='flex items-center gap-1'>
         {[...Array(5)].map((_, index) => {
           const full = index + 1 <= rating
@@ -54,7 +54,7 @@ const EditReview = ({ space, review }: { space:Space, review: Review}) => {
             <div key={index} className='relative'>
               <Star
                 className={clsx(
-                  'w-5 h-5 absolute left-0 w-1/2 cursor-pointer',
+                  'w-5 h-5 absolute left-0 cursor-pointer',
                   rating >= index + 0.5
                     ? 'fill-yellow-400 text-yellow-400'
                     : 'text-gray-400',

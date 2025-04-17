@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 import { BookingProvider } from '@/context/booking-context'
-import { EditModalProvider} from '@/context/edited-status'
+import { EditModalProvider } from '@/context/edited-status'
 
 export const metadata: Metadata = {
   title: 'Space Details',
@@ -13,8 +13,11 @@ export default function SpaceDetailLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <BookingProvider> <EditModalProvider>
+  return (
+    <BookingProvider>
+      <EditModalProvider>
         {children}
       </EditModalProvider>
     </BookingProvider>
+  )
 }

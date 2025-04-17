@@ -53,7 +53,7 @@ const CreateReview = ({ space }: { space: Space }) => {
             <div key={index} className='relative'>
               <Star
                 className={clsx(
-                  'w-5 h-5 absolute left-0 w-1/2 cursor-pointer',
+                  'w-5 h-5 absolute left-0 cursor-pointer',
                   rating >= index + 0.5
                     ? 'fill-yellow-400 text-yellow-400'
                     : 'text-gray-400',
