@@ -59,11 +59,8 @@ const ReviewActions = ({
           <MoreHorizontalIcon className='h-5 w-5' />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align='end'
-        onClick={handleEdit}
-      >
-        <DropdownMenuItem>
+      <DropdownMenuContent align='end'>
+        <DropdownMenuItem onClick={handleEdit}>
           <Edit className='mr-2 h-4 w-4' />
           Edit
         </DropdownMenuItem>

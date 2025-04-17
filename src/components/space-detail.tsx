@@ -80,6 +80,7 @@ const SpaceDetailClient = ({
         ).toFixed(1)
       : null
 
+
   return (
     <section id='booking'>
       <Button variant='ghost' size='sm' asChild className='mb-6'>
