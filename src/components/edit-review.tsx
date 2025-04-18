@@ -11,13 +11,20 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { updateReview } from '@/repo/reviews'
+import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
-import { createReview } from '@/repo/reviews'
+import { useEditModal } from '@/context/edited-status'
+import ConfirmBox from '@/components/ui/confirmbox'
 
-const CreateReview = ({ space }: { space: Space }) => {
+const EditReview = ({ space, review }: { space: Space, review: Review }) => {
   const { data: session } = useSession()
-  const [review, setReview] = useState('')
-  const [rating, setRating] = useState(0)
+  const { closeModal } = useEditModal()
+  const [comment, setReview] = useState(review.comment)
+  const [originalComment, setOriginalComment] = useState(review.comment)
+  const [rating, setRating] = useState(review.rating)
+  const [originalRating, setOriginalRating] = useState(review.rating)
+  const [showConfirm, setShowConfirm] = useState(false)
   const router = useRouter()
 
   const handleStarClick = (index: number, isHalf: boolean) => {
@@ -29,22 +36,30 @@ const CreateReview = ({ space }: { space: Space }) => {
 
   const handleSubmit = async () => {
     try {
-      await createReview(space._id, review, rating, session?.accessToken || '')
-      toast.success('Review created')
+      await updateReview(space._id, review._id, comment, rating, session?.accessToken || '')
+      toast.success('Updated Review')
+      closeModal()
       router.refresh()
     } catch (e) {
       if (e instanceof Error) toast.error(e.message)
       else toast.error('Something went wrong')
-    } finally {
-      setReview('')
-      setRating(0)
     }
+  }
+
+  const handleConfirmSubmit = () => {
+    setShowConfirm(true)
+  }
+
+  const handleCancel = () => {
+    setReview(originalComment)
+    setRating(originalRating)
+    setShowConfirm(false)
+    closeModal()
   }
 
   return (
     <div className='space-y-4'>
-      <h2 className='text-xl font-bold'>Create Your Review</h2>
-
+      <h2 className='text-xl font-bold'>Edit Your Review</h2>
       <div className='flex items-center gap-1'>
         {[...Array(5)].map((_, index) => {
           const full = index + 1 <= rating
@@ -76,19 +91,29 @@ const CreateReview = ({ space }: { space: Space }) => {
 
       <Textarea
         placeholder='type your review...'
-        value={review}
+        value={comment}
         onChange={(e) => setReview(e.target.value)}
         className='min-h-[120px]'
       />
 
       <Button
-        onClick={handleSubmit}
-        disabled={rating === 0 || review.trim() === ''}
+        onClick={handleConfirmSubmit} // เรียก ConfirmBox ก่อน Submit
+        disabled={rating === 0 || comment.trim() === ''}
       >
         Submit
       </Button>
+
+      {showConfirm && (
+        <ConfirmBox
+          question="Are you sure you want to submit the changes?"
+          confirmColor="bg-blue-500"
+          cancelColor="bg-gray-500"
+          onConfirm={handleSubmit}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   )
 }
 
-export default CreateReview
+export default EditReview

@@ -1,5 +1,5 @@
 'use client'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -32,10 +32,12 @@ import { useBooking } from '@/context/booking-context'
 import { Reservation } from '@/interfaces/reservation.interface'
 import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
+import { useEditModal } from '@/context/edited-status'
 
 import BookingMenuSkeleton from './booking-menu-skeleton'
 import CreateReview from './create-review'
 import ReviewBox from './review-box'
+import EditReview from './edit-review'
 
 const BookingMenu = dynamic(() => import('@/components/booking-menu'), {
   loading: () => <BookingMenuSkeleton />,
@@ -52,6 +54,7 @@ const SpaceDetailClient = ({
   reviews: Review[]
 }) => {
   const { setSelectedRoom } = useBooking()
+  const { isEdit } =useEditModal();
   const { data: session } = useSession()
 
   const hasReservation = useMemo(() => {
@@ -76,6 +79,7 @@ const SpaceDetailClient = ({
           reviews.length
         ).toFixed(1)
       : null
+
 
   return (
     <section id='booking'>
@@ -139,18 +143,32 @@ const SpaceDetailClient = ({
               </TabsContent>
               <TabsContent value='reviews' className='mt-4'>
                 <div>
-                  {hasReservation ? (
-                    hasReview ? (
-                      <>
-                        <p className='text-2xl font-bold mb-4'>Your review</p>
-                        <ReviewBox
-                          review={
-                            reviews.find(
-                              (r) => r.userId._id === session?.user._id,
-                            )!
-                          }
-                        />
-                      </>
+                  {hasReservation ?
+                    (hasReview ? (
+                      (isEdit ? (
+                        <>
+                          <p className='text-2xl font-bold mb-4'>Your review</p>
+                          <EditReview
+                            space={space} 
+                              review={
+                                reviews.find(
+                                  (r) => r.userId._id === session?.user._id,
+                                )!
+                              } 
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <p className='text-2xl font-bold mb-4'>Your review</p>
+                          <ReviewBox
+                            review={
+                              reviews.find(
+                                (r) => r.userId._id === session?.user._id,
+                              )!
+                            }
+                          />
+                        </>
+                      ))
                     ) : (
                       <CreateReview space={space} />
                     )
