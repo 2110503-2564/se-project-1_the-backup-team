@@ -130,12 +130,12 @@ const ReviewBox = ({ review }: { review: Review }) => {
             </div>
           </div>
 
-          {session?.user?._id === review.userId._id && (
-              <ReviewActions
-                spaceId={review.spaceId}
-                reviewId={review._id}
-                token={session?.accessToken || ''}
-              />
+          {(session?.user?._id === review.userId._id || session?.user?.role === 'admin') && (
+            <ReviewActions
+              spaceId={review.spaceId}
+              reviewId={review._id}
+              token={session?.accessToken || ''}
+            />
           )}
         </CardHeader>
         <CardContent>

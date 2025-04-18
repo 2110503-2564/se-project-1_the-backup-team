@@ -15,12 +15,16 @@ import { updateReview } from '@/repo/reviews'
 import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
 import { useEditModal } from '@/context/edited-status'
+import ConfirmBox from '@/components/ui/confirmbox'
 
 const EditReview = ({ space, review }: { space: Space, review: Review }) => {
   const { data: session } = useSession()
   const { closeModal } = useEditModal()
   const [comment, setReview] = useState(review.comment)
+  const [originalComment, setOriginalComment] = useState(review.comment)
   const [rating, setRating] = useState(review.rating)
+  const [originalRating, setOriginalRating] = useState(review.rating)
+  const [showConfirm, setShowConfirm] = useState(false)
   const router = useRouter()
 
   const handleStarClick = (index: number, isHalf: boolean) => {
@@ -42,10 +46,20 @@ const EditReview = ({ space, review }: { space: Space, review: Review }) => {
     }
   }
 
+  const handleConfirmSubmit = () => {
+    setShowConfirm(true)
+  }
+
+  const handleCancel = () => {
+    setReview(originalComment)
+    setRating(originalRating)
+    setShowConfirm(false)
+    closeModal()
+  }
+
   return (
     <div className='space-y-4'>
       <h2 className='text-xl font-bold'>Edit Your Review</h2>
-      editing
       <div className='flex items-center gap-1'>
         {[...Array(5)].map((_, index) => {
           const full = index + 1 <= rating
@@ -83,11 +97,21 @@ const EditReview = ({ space, review }: { space: Space, review: Review }) => {
       />
 
       <Button
-        onClick={handleSubmit}
+        onClick={handleConfirmSubmit} // เรียก ConfirmBox ก่อน Submit
         disabled={rating === 0 || comment.trim() === ''}
       >
         Submit
       </Button>
+
+      {showConfirm && (
+        <ConfirmBox
+          question="Are you sure you want to submit the changes?"
+          confirmColor="bg-blue-500"
+          cancelColor="bg-gray-500"
+          onConfirm={handleSubmit}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   )
 }
