@@ -34,10 +34,10 @@ const EditReview = ({ space, review }: { space: Space, review: Review }) => {
     setRating(newRating)
   }
 
-  const handleSubmit = async () => {
+  const handleConfirm = async () => {
     try {
       await updateReview(space._id, review._id, comment, rating, session?.accessToken || '')
-      toast.success('Updated Review')
+      toast.success('Your review was successfully updated')
       closeModal()
       router.refresh()
     } catch (e) {
@@ -46,14 +46,9 @@ const EditReview = ({ space, review }: { space: Space, review: Review }) => {
     }
   }
 
-  const handleConfirmSubmit = () => {
-    setShowConfirm(true)
-  }
-
   const handleCancel = () => {
     setReview(originalComment)
     setRating(originalRating)
-    setShowConfirm(false)
     closeModal()
   }
 
@@ -97,21 +92,19 @@ const EditReview = ({ space, review }: { space: Space, review: Review }) => {
       />
 
       <Button
-        onClick={handleConfirmSubmit} // เรียก ConfirmBox ก่อน Submit
+        onClick={handleConfirm}
         disabled={rating === 0 || comment.trim() === ''}
       >
-        Submit
+        Confirm
       </Button>
 
-      {showConfirm && (
-        <ConfirmBox
-          question="Are you sure you want to submit the changes?"
-          confirmColor="bg-blue-500"
-          cancelColor="bg-gray-500"
-          onConfirm={handleSubmit}
-          onCancel={handleCancel}
-        />
-      )}
+      <Button
+        onClick={handleCancel}
+        disabled={rating === 0 || comment.trim() === ''}
+        className='mx-2 bg-red-500 hover:bg-red-600'
+      >
+        Cancel
+      </Button>
     </div>
   )
 }
