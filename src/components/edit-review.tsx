@@ -10,14 +10,14 @@ import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
+import ConfirmBox from '@/components/ui/confirmbox'
 import { Textarea } from '@/components/ui/textarea'
-import { updateReview } from '@/repo/reviews'
+import { useEditModal } from '@/context/edited-status'
 import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
-import { useEditModal } from '@/context/edited-status'
-import ConfirmBox from '@/components/ui/confirmbox'
+import { updateReview } from '@/repo/reviews'
 
-const EditReview = ({ space, review }: { space: Space, review: Review }) => {
+const EditReview = ({ space, review }: { space: Space; review: Review }) => {
   const { data: session } = useSession()
   const { closeModal } = useEditModal()
   const [comment, setReview] = useState(review.comment)
@@ -36,7 +36,13 @@ const EditReview = ({ space, review }: { space: Space, review: Review }) => {
 
   const handleConfirm = async () => {
     try {
-      await updateReview(space._id, review._id, comment, rating, session?.accessToken || '')
+      await updateReview(
+        space._id,
+        review._id,
+        comment,
+        rating,
+        session?.accessToken || '',
+      )
       toast.success('Your review was successfully updated')
       closeModal()
       router.refresh()

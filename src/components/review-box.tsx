@@ -11,8 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Review } from '@/interfaces/review.interface'
 import { downvoteReview, upvoteReview } from '@/repo/reviews'
 
-import { Card, CardContent, CardHeader } from './ui/card'
 import ReviewActions from './reviews-actions'
+import { Card, CardContent, CardHeader } from './ui/card'
 
 const ReviewBox = ({ review }: { review: Review }) => {
   const { data: session } = useSession()
@@ -94,7 +94,7 @@ const ReviewBox = ({ review }: { review: Review }) => {
     <>
       <Card className='w-full'>
         <CardHeader className='flex flex-row justify-between items-center gap-4 pb-2'>
-          <div className="flex items-center gap-4">
+          <div className='flex items-center gap-4'>
             <Avatar>
               <AvatarImage
                 src={review.userId.image || '/profile/profile-0.jpg'}
@@ -130,11 +130,13 @@ const ReviewBox = ({ review }: { review: Review }) => {
             </div>
           </div>
 
-          {(session?.user?._id === review.userId._id || session?.user?.role === 'admin') && (
+          {(session?.user?._id === review.userId._id ||
+            session?.user?.role === 'admin') && (
             <ReviewActions
               spaceId={review.spaceId}
               reviewId={review._id}
               token={session?.accessToken || ''}
+              reviewUserId={review.userId._id}
             />
           )}
         </CardHeader>

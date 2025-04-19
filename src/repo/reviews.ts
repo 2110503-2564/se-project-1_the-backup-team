@@ -63,7 +63,7 @@ export const updateReview = (
   reviewId: string,
   comment: string,
   rating: number,
-  token: string
+  token: string,
 ) => {
   return new Promise<APIResponse<Review>>(async (resolve, reject) => {
     try {

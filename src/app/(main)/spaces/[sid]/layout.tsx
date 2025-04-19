@@ -15,9 +15,7 @@ export default function SpaceDetailLayout({
 }) {
   return (
     <BookingProvider>
-      <EditModalProvider>
-        {children}
-      </EditModalProvider>
+      <EditModalProvider>{children}</EditModalProvider>
     </BookingProvider>
   )
 }

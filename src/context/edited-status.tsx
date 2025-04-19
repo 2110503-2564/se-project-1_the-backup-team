@@ -9,9 +9,15 @@ type EditModalContextType = {
   closeModal: () => void
 }
 
-const EditModalContext = createContext<EditModalContextType | undefined>(undefined)
+const EditModalContext = createContext<EditModalContextType | undefined>(
+  undefined,
+)
 
-export const EditModalProvider = ({ children }: { children: React.ReactNode }) => {
+export const EditModalProvider = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
   const [isEdit, setIsEdit] = useState(false)
 
   const openModal = () => setIsEdit(true)
@@ -26,7 +32,8 @@ export const EditModalProvider = ({ children }: { children: React.ReactNode }) =
 
 export const useEditModal = () => {
   const context = useContext(EditModalContext)
-  if (!context) throw new Error('useEditModal must be used within EditModalProvider')
+  if (!context)
+    throw new Error('useEditModal must be used within EditModalProvider')
   return context
 }
 

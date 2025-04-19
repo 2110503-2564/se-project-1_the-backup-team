@@ -29,15 +29,15 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useBooking } from '@/context/booking-context'
+import { useEditModal } from '@/context/edited-status'
 import { Reservation } from '@/interfaces/reservation.interface'
 import { Review } from '@/interfaces/review.interface'
 import { Space } from '@/interfaces/space.interface'
-import { useEditModal } from '@/context/edited-status'
 
 import BookingMenuSkeleton from './booking-menu-skeleton'
 import CreateReview from './create-review'
-import ReviewBox from './review-box'
 import EditReview from './edit-review'
+import ReviewBox from './review-box'
 
 const BookingMenu = dynamic(() => import('@/components/booking-menu'), {
   loading: () => <BookingMenuSkeleton />,
@@ -54,7 +54,7 @@ const SpaceDetailClient = ({
   reviews: Review[]
 }) => {
   const { setSelectedRoom } = useBooking()
-  const { isEdit } =useEditModal();
+  const { isEdit } = useEditModal()
   const { data: session } = useSession()
 
   const hasReservation = useMemo(() => {
@@ -79,7 +79,6 @@ const SpaceDetailClient = ({
           reviews.length
         ).toFixed(1)
       : null
-
 
   return (
     <section id='booking'>
@@ -143,18 +142,18 @@ const SpaceDetailClient = ({
               </TabsContent>
               <TabsContent value='reviews' className='mt-4'>
                 <div>
-                  {hasReservation ?
-                    (hasReview ? (
-                      (isEdit ? (
+                  {hasReservation ? (
+                    hasReview ? (
+                      isEdit ? (
                         <>
                           <p className='text-2xl font-bold mb-4'>Your review</p>
                           <EditReview
-                            space={space} 
-                              review={
-                                reviews.find(
-                                  (r) => r.userId._id === session?.user._id,
-                                )!
-                              } 
+                            space={space}
+                            review={
+                              reviews.find(
+                                (r) => r.userId._id === session?.user._id,
+                              )!
+                            }
                           />
                         </>
                       ) : (
@@ -168,7 +167,7 @@ const SpaceDetailClient = ({
                             }
                           />
                         </>
-                      ))
+                      )
                     ) : (
                       <CreateReview space={space} />
                     )
