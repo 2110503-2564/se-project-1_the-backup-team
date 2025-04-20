@@ -10,7 +10,6 @@ import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import ConfirmBox from '@/components/ui/confirmbox'
 import { Textarea } from '@/components/ui/textarea'
 import { useEditModal } from '@/context/edited-status'
 import { Review } from '@/interfaces/review.interface'
@@ -21,10 +20,9 @@ const EditReview = ({ space, review }: { space: Space; review: Review }) => {
   const { data: session } = useSession()
   const { closeModal } = useEditModal()
   const [comment, setReview] = useState(review.comment)
-  const [originalComment, setOriginalComment] = useState(review.comment)
+  const [originalComment, _setOriginalComment] = useState(review.comment)
   const [rating, setRating] = useState(review.rating)
-  const [originalRating, setOriginalRating] = useState(review.rating)
-  const [showConfirm, setShowConfirm] = useState(false)
+  const [originalRating, _setOriginalRating] = useState(review.rating)
   const router = useRouter()
 
   const handleStarClick = (index: number, isHalf: boolean) => {
