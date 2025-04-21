@@ -67,7 +67,9 @@ const FeaturedSpaces = async () => {
                               <Clock className='w-4 h-4' />
                               {`${space.opentime.slice(0, 2)}:${space.opentime.slice(2)} - ${space.closetime.slice(0, 2)}:${space.closetime.slice(2)}`}
                             </div>
+
                             <div className='text-gray-500 text-sm flex gap-1 items-center'>
+                              {space.rooms.length}{' '}
                               {space.rooms.length > 1 ? 'rooms' : 'room'}{' '}
                               available
                             </div>
