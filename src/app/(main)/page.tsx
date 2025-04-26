@@ -1,4 +1,5 @@
-import FeaturedSpaces from '@/components/featured'
+import FeaturedEvents from '@/components/featured-events'
+import FeaturedSpaces from '@/components/featured-space'
 import HeroSection from '@/components/hero'
 import HomePage from '@/components/home'
 
@@ -7,11 +8,14 @@ const Home = async () => {
     <main>
       <div className='flex flex-col items-center justify-center'>
         <HeroSection />
-
         <div className='container-wrapper gap-6'>
-          <div className='container border-b border-dashed'>
+          <section
+            id='featured'
+            className='container border-b border-dashed scroll-mt-14'
+          >
+            <FeaturedEvents />
             <FeaturedSpaces />
-          </div>
+          </section>
           <div className='container'>
             <HomePage />
           </div>
