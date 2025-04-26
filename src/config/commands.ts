@@ -15,6 +15,10 @@ export const commandConfig: CommandsConfig = {
       href: '/spaces',
     },
     {
+      title: 'Events',
+      href: '/events',
+    },
+    {
       title: 'Reservations',
       href: '/reservations',
     },
