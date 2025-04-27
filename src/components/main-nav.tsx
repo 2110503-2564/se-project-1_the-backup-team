@@ -12,13 +12,13 @@ const MainNav = () => {
   return (
     <div className='mr-4 flex'>
       <Link href='/' className='mr-4 flex items-center gap-4 lg:mr-6'>
-        <Icons.logo className='h-6 w-6' />
+        <Icons.logo className='size-6' />
         <span className='hidden font-bold lg:inline-block'>Spaceflow</span>
       </Link>
       <nav className='flex items-center gap-4 text-sm xl:gap-6'>
         <Link
           href='/#featured'
-          className='transition-colors hover:text-foreground/80'
+          className='hidden md:flex transition-colors hover:text-foreground/80'
         >
           Featured
         </Link>
@@ -32,15 +32,24 @@ const MainNav = () => {
           Spaces
         </Link>
         <Link
-          href='/reservations'
+          href='/events'
           className={cn(
             'transition-colors hover:text-foreground/80',
+            pathname === '/events' ? 'text-foreground' : 'text-foreground/80',
+          )}
+        >
+          Events
+        </Link>
+        <Link
+          href='/reservations'
+          className={cn(
+            'hidden sm:flex transition-colors hover:text-foreground/80',
             pathname === '/reservations'
               ? 'text-foreground'
               : 'text-foreground/80',
           )}
         >
-          My Reservations
+          Reservations
         </Link>
       </nav>
     </div>

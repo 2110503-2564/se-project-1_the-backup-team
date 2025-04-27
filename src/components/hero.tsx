@@ -76,15 +76,15 @@ const HeroSection = () => {
           setApi={setApi}
           className='flex w-full items-center justify-center text-center'
         >
-          <CarouselContent className='w-full h-[40vh] md:h-[45vh] lg:h-[70vh] items-center'>
+          <CarouselContent className='w-full h-[30vh] md:h-[45vh] lg:h-[70vh] items-center'>
             {pages.map((page) => (
               <CarouselItem key={page.id}>
-                <div className='h-40 md:h-48 flex flex-col justify-between items-center'>
+                <div className='h-36 sm:h-40 md:h-48 flex flex-col justify-between items-center px-4'>
                   <div className='flex flex-col gap-4 items-center'>
-                    <h1 className='text-3xl md:text-5xl lg:text-6xl font-bold'>
+                    <h1 className='text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold'>
                       {page.heading}
                     </h1>
-                    <h2 className='w-xl text-md md:text-lg opacity-90'>
+                    <h2 className='text-sm sm:text-md md:text-lg opacity-90 text-wrap'>
                       {page.sub}
                     </h2>
                   </div>

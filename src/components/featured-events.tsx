@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { format } from 'date-fns'
-import { Box, Calendar, ChevronRight, Clock, Users } from 'lucide-react'
+import { Calendar, ChevronRight, Clock, MapPin, Users } from 'lucide-react'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
@@ -127,12 +127,16 @@ const FeaturedEvents = async () => {
   try {
     const events = await fetchMockEvents(0, 6)
 
+    if (events.length === 0) throw new Error('No featured events')
+
     return (
       <div id='featured-events' className='scroll-mt-14'>
         <div className='flex flex-col items-center py-12'>
           <div className='w-full'>
             <div className='flex relative items-center justify-between gap-4 mb-4 ml-2 w-auto'>
-              <h2 className='text-3xl font-semibold'>Featured Events</h2>
+              <h2 className='text-2xl sm:text-3xl font-semibold'>
+                Featured Events
+              </h2>
               <Button size='sm'>
                 <Link href='/events' className='flex items-center gap-1'>
                   All Events
@@ -140,8 +144,8 @@ const FeaturedEvents = async () => {
                 </Link>
               </Button>
             </div>
-            <div className='w-full rounded-md border inset-shadow-sm px-6 py-2'>
-              <div className='flex gap-4 overflow-y-scroll p-4'>
+            <div className='relative w-full rounded-md border inset-shadow-sm'>
+              <div className='relative flex gap-4 overflow-y-scroll p-6'>
                 {events.map((event) => (
                   <Link
                     key={event._id}
@@ -150,7 +154,7 @@ const FeaturedEvents = async () => {
                   >
                     {event.attendees < event.capacity &&
                       event.attendees / event.capacity >= 0.75 && (
-                        <div className='absolute inset-0 blur-sm bg-gradient-to-r from-fuchsia-500 to-pink-500 rounded-lg opacity-70 group-hover:opacity-90 transition duration-3000 group-hover:duration-1500 animate-gradient-x'></div>
+                        <div className='absolute inset-0 blur-sm bg-gradient-to-r from-pink-500 to-cyan-500 rounded-sm opacity-70 group-hover:opacity-90 transition duration-300 group-hover:duration-100 animate-gradient-x'></div>
                       )}
                     <Card
                       key={event._id}
@@ -183,7 +187,7 @@ const FeaturedEvents = async () => {
                               {new Date(event.updatedAt).toDateString() ===
                                 new Date().toDateString() &&
                                 event.attendees < event.capacity && (
-                                  <span className='z-50 relative flex size-2'>
+                                  <span className='relative flex size-2'>
                                     <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75'></span>
                                     <span className='relative inline-flex size-2 rounded-full bg-emerald-500'></span>
                                   </span>
@@ -191,7 +195,7 @@ const FeaturedEvents = async () => {
                             </div>
                           </CardTitle>
                           <CardDescription className='flex gap-1 items-center text-muted-foreground'>
-                            <Box className='w-4 h-4' />
+                            <MapPin className='size-4' />
                             {event.space}
                           </CardDescription>
                         </div>
@@ -202,22 +206,22 @@ const FeaturedEvents = async () => {
                             <div
                               className={cn(
                                 'text-sm flex gap-1 items-center',
-                                event.attendees === event.capacity
-                                  ? 'text-red-700'
-                                  : 'text-green-700',
+                                event.attendees < event.capacity
+                                  ? 'text-green-700'
+                                  : 'text-red-700',
                               )}
                             >
-                              <Users className='w-4 h-4' />
+                              <Users className='size-4' />
                               {event.attendees} / {event.capacity}
                             </div>
 
                             <div className='flex flex-col gap-1 items-start text-gray-500 text-sm'>
                               <div className='flex gap-1 items-center'>
-                                <Calendar className='w-4 h-4' />
+                                <Calendar className='size-4' />
                                 {format(event.startDate, 'dd.MM.yy')}
                               </div>
                               <div className='flex gap-1 items-center justify-between'>
-                                <Clock className='w-4 h-4' />
+                                <Clock className='size-4' />
                                 {format(event.startDate, 'HH:mm')}
                               </div>
                             </div>
