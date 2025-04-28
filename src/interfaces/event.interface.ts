@@ -4,7 +4,10 @@ import { Space } from './space.interface'
 export interface Event {
   _id: string
   name: string
-  space: string
+  space: {
+    _id: string
+    name: string
+  }
   description: string
   host: string
   attendee: number
@@ -16,6 +19,6 @@ export interface Event {
 }
 
 export interface EventsPagination {
-  event: Event[]
+  events: Event[]
   pagination: Pagination
 }
