@@ -39,6 +39,7 @@ import { cn } from '@/lib/utils'
 import { createAttendance, getAttendanceById } from "@/repo/attendance"
 import { createReservation } from '@/repo/reservations'
 import { getTimeslots } from '@/repo/spaces'
+import { getEventById } from '@/repo/events'
 
 const BookingEvent = ({ event }: { event: Event }) => {
   const router = useRouter()
@@ -49,35 +50,52 @@ const BookingEvent = ({ event }: { event: Event }) => {
   const [time, setTime] = useState('')
   const [timeslots, setTimeslots] = useState<TimeSlots[]>([])
 
-  const [isJoin,setIsJoin] = useState<boolean | null>(null)
+  const [isJoined, setIsJoined] = useState<boolean | undefined>(false)
+  const [isFull,setIsFull] =  useState<boolean | undefined>(false)
+  const [isEnd, setIsEnd] = useState<boolean | undefined>(false)
 
   async function join() {
     const result = await createAttendance(event._id, session?.accessToken!);
     if (result.success) {
-      setIsJoin(true);
+      setIsJoined(true);
     }
+    toast.success('Joined! See you there!');
+    router.refresh()
   }
 
   async function checkAttendance() {
+    if (!session?.accessToken) return;
     const result = await getAttendanceById(session?.accessToken!);
-    console.log(result)
     for (const item of result) {
       if (item.event._id == event._id) {
-        return setIsJoin(true);
+        setIsJoined(true);
+        break;
       }
-      setIsJoin(false);
     }
-  }isJoin
-
-  useEffect(() => {
-    checkAttendance();
-  }, [])
-
-  if (isJoin == null) {
-    return null;
   }
 
-  const fromDate = new Date()
+  function checkEventEnd() {
+    const today = new Date()
+    const endDate = new Date(event.endDate);
+    if (today > endDate) {
+      setIsEnd(true);
+    }
+  }
+
+  async function checkMaxCap() {
+    // I think it's better if we requery, the delay tho..
+    const result = await getEventById(event._id);
+    if (result.attendee >= result.capacity) {
+      setIsFull(true);
+    }
+  }
+
+  useEffect(() => {
+    checkAttendance(),
+    checkEventEnd(),
+    checkMaxCap()
+  }, [])
+
 
   return (
     <Card id='booking-menu' className='sticky top-20 scroll-mt-20'>
@@ -91,7 +109,10 @@ const BookingEvent = ({ event }: { event: Event }) => {
       <CardContent>
         <div className='w-full'>
           <CardTitle className='text-md pb-3'>Current Attendees</CardTitle>
-          <CardTitle className='text-[#33B373] text-lg/7 font-bold'>
+          <CardTitle className={cn(
+            'flex items-center gap-1 text-lg/7 font-bold',
+            event.attendee < event.capacity ? 'text-green-700' : 'text-red-700'
+          )}>
             <div className='col-span-2 mb-2'>
               {`${event.attendee}/${event.capacity}`}
             </div>
@@ -116,9 +137,14 @@ const BookingEvent = ({ event }: { event: Event }) => {
           </Button>
           <Button
             className='cursor-pointer w-1/2 sm:w-1/4 lg:w-1/2'
-            disabled={isJoin}
+            disabled={isFull || isJoined || isEnd || !session?.accessToken}
             type='submit' onClick={() => {join()}}>
-            Join
+            {
+              isEnd ? 'Event Ended' :
+                isJoined ? 'Joined' :
+                  isFull ? 'Event Full' :
+                    session?.accessToken ? 'Join' : 'Sign In To Join'
+            }
           </Button>
         </div>
       </CardFooter>
