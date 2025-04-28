@@ -11,7 +11,7 @@ export default async function EventsdetailPage({
 
   const event = await getEventById(eid)
 
-  const space = await getSpaceById(event.space)
+  const space = await getSpaceById(event.space._id)
 
   return <EventDetailClient event={event} space={space} />
 }

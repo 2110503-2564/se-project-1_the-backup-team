@@ -1,5 +1,5 @@
 'use client'
-import { useMemo } from 'react'
+// import { useMemo } from 'react'
 
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -7,34 +7,30 @@ import Link from 'next/link'
 
 import {
   ArrowLeft,
-  Clock,
-  Coins,
   MapPin,
-  Smartphone,
-  Users,
 } from 'lucide-react'
-import { Star } from 'lucide-react'
+// import { Star } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Badge } from '@/components/ui/badge'
+// import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from '@/components/ui/card'
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardFooter,
+//   CardTitle,
+// } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useBooking } from '@/context/booking-context'
-import { useEditModal } from '@/context/edited-status'
-import { Attendance } from '@/interfaces/attendance.interface'
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+// import { useBooking } from '@/context/booking-context'
+// import { useEditModal } from '@/context/edited-status'
+// import { Attendance } from '@/interfaces/attendance.interface'
 import { Event } from '@/interfaces/event.interface'
-import { Reservation } from '@/interfaces/reservation.interface'
+// import { Reservation } from '@/interfaces/reservation.interface'
 import { Space } from '@/interfaces/space.interface'
-import { getSpaceById } from '@/repo/spaces'
+// import { getSpaceById } from '@/repo/spaces'
 
 import BookingMenuSkeleton from './booking-menu-skeleton'
 // import CreateReview from './create-review'

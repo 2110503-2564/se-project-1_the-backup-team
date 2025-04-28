@@ -1,5 +1,5 @@
 import { Pagination } from './interface'
-import { Space } from './space.interface'
+// import { Space } from './space.interface'
 
 export interface Event {
   _id: string
