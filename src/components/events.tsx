@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/card'
 import { Event } from '@/interfaces/event.interface'
 import { cn } from '@/lib/utils'
+import EventsActions from './Event-actions'
 
 const EventCard = ({ event }: { event: Event }) => {
   return (
@@ -34,19 +35,17 @@ const EventCard = ({ event }: { event: Event }) => {
           </Suspense>
         </AspectRatio>
       </div>
-      
+
       <CardContent className='pt-1'>
         <div className='space-y-1'>
           <div className='flex justify-between items-center'>
             <CardTitle className='text-xl font-bold truncate'>
               {event.name}
             </CardTitle>
-            <div className={cn(
-              'flex items-center gap-1 text-sm',
-              event.attendee < event.capacity ? 'text-green-700' : 'text-red-700'
-            )}>
-              <Users className='h-4 w-4' />
-              <span>{event.attendee} / {event.capacity}</span>
+            <div className={cn('flex items-center gap-1 text-sm')}>
+              <div className='text-black'>
+                <EventsActions event={event}></EventsActions>
+              </div>
             </div>
           </div>
           <CardDescription className='flex gap-1 items-center text-muted-foreground'>
@@ -55,24 +54,40 @@ const EventCard = ({ event }: { event: Event }) => {
           </CardDescription>
         </div>
       </CardContent>
-      
+
       <CardFooter className='mt-auto flex flex-col items-start'>
-        <div className='flex w-full justify-between items-start'>
+        <div className='flex-col w-full justify-between items-start'>
           <div className='flex items-center gap-1 text-sm'>
+            <Calendar className='h-4 w-4' />
+            <span>{format(event.startDate, 'MMM d')} start</span>
+          </div>
+
+          <div className='flex items-center justify-between gap-1 text-sm'>
+            <div className='flex gap-1'>
               <Calendar className='h-4 w-4' />
-              <span>{format(event.startDate, 'MMM d')} start</span>
+              <span>{format(event.endDate, 'MMM d')} end</span>
+            </div>
+
+            <div
+              className={cn(
+                'flex flex-row gap-2 items-cen bottom-0 right-0',
+                event.attendee < event.capacity
+                  ? 'text-green-700'
+                  : 'text-red-700',
+              )}
+            >
+              <Users className='h-4 w-4' />
+              <span>
+                {event.attendee} / {event.capacity}
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className='flex w-full justify-between items-start mt-2'>
-          <div className='flex items-center gap-1 text-sm'>
-              <Calendar className='h-4 w-4' />
-              <span>{format(event.endDate, 'MMM d')} end</span>
-          </div>
-        </div>
-        
         <Button variant='outline' className='w-full mt-2 p-0'>
-            <Link href={`/events/${event._id}`} className='w-full'>view Details</Link>
+          <Link href={`/events/${event._id}`} className='w-full'>
+            view Details
+          </Link>
         </Button>
       </CardFooter>
     </Card>
