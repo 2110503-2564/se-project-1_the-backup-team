@@ -3,9 +3,11 @@ import { MouseEvent, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
+
 import { format } from 'date-fns'
 import { CalendarIcon, Clock, Coffee } from 'lucide-react'
 import { Session } from 'next-auth'
+import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -34,16 +36,46 @@ import { useBooking } from '@/context/booking-context'
 import { Event } from '@/interfaces/event.interface'
 import { Space, TimeSlots } from '@/interfaces/space.interface'
 import { cn } from '@/lib/utils'
+import { createAttendance, getAttendanceById } from "@/repo/attendance"
 import { createReservation } from '@/repo/reservations'
 import { getTimeslots } from '@/repo/spaces'
 
 const BookingEvent = ({ event }: { event: Event }) => {
   const router = useRouter()
+  const { data: session } = useSession();
   const { selectedRoom, setSelectedRoom } = useBooking()
 
   const [date, setDate] = useState<Date>()
   const [time, setTime] = useState('')
   const [timeslots, setTimeslots] = useState<TimeSlots[]>([])
+
+  const [isJoin,setIsJoin] = useState<boolean | null>(null)
+
+  async function join() {
+    const result = await createAttendance(event._id, session?.accessToken!);
+    if (result.success) {
+      setIsJoin(true);
+    }
+  }
+
+  async function checkAttendance() {
+    const result = await getAttendanceById(session?.accessToken!);
+    console.log(result)
+    for (const item of result) {
+      if (item.event._id == event._id) {
+        return setIsJoin(true);
+      }
+      setIsJoin(false);
+    }
+  }isJoin
+
+  useEffect(() => {
+    checkAttendance();
+  }, [])
+
+  if (isJoin == null) {
+    return null;
+  }
 
   const fromDate = new Date()
 
@@ -84,8 +116,8 @@ const BookingEvent = ({ event }: { event: Event }) => {
           </Button>
           <Button
             className='cursor-pointer w-1/2 sm:w-1/4 lg:w-1/2'
-            type='submit'
-          >
+            disabled={isJoin}
+            type='submit' onClick={() => {join()}}>
             Join
           </Button>
         </div>

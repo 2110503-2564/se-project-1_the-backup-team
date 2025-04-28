@@ -5,3 +5,10 @@ export interface Attendance {
   event: Event
   user: string
 }
+
+export interface AttendanceResponse {
+  createAt:string
+  _id:string
+  event:string
+  user:string
+}
