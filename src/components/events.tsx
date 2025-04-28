@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/card'
 import { Event } from '@/interfaces/event.interface'
 import { cn } from '@/lib/utils'
+import JoinEvents from './joined-events'
 import EventsActions from './Event-actions'
 
 const EventCard = ({ event }: { event: Event }) => {
@@ -96,11 +97,15 @@ const EventCard = ({ event }: { event: Event }) => {
 
 const EventsView = async ({ events }: { events: Event[] }) => {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:grid-rows-2'>
-      {events.map((event) => (
-        <EventCard key={event._id} event={event} />
-      ))}
-    </div>
+    <>
+      <JoinEvents />
+      <p className='text-xl sm:text-md font-semibold'>Other Events</p>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:grid-rows-2'>
+        {events.map((event) => (
+          <EventCard key={event._id} event={event} />
+        ))}
+      </div>
+    </>
   )
 }
 
