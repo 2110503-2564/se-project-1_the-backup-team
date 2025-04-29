@@ -1,25 +1,12 @@
 'use client'
-import { MouseEvent, useEffect, useState } from 'react'
+import { useState } from 'react'
 
-// import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation'
-// import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
-// import { format } from 'date-fns'
-import { CalendarIcon, Clock, Edit, Eye, MoreHorizontal, X } from 'lucide-react'
+import { Edit, MoreHorizontal, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-// import { Calendar } from '@/components/ui/calendar'
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from '@/components/ui/dialog'
 import ConfirmBox from '@/components/ui/confirmbox'
 import {
   DropdownMenu,
@@ -28,29 +15,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from '@/components/ui/popover'
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from '@/components/ui/select'
-
 import { useEditEventModal } from '@/context/event-status'
 import { Event } from '@/interfaces/event.interface'
-import { Space } from '@/interfaces/space.interface'
-// import { TimeSlots } from '@/interfaces/space.interface'
-
-// import { cn } from '@/lib/utils'
-
 import { deleteEvent } from '@/repo/events'
-
-// import AddEventEditForm from './edit-event-form'
 
 const EventsActions = ({ event }: { event: Event }) => {
   const router = useRouter()
@@ -118,11 +85,6 @@ const EventsActions = ({ event }: { event: Event }) => {
           onCancel={() => setShowConfirm(false)}
         />
       )}
-
-      {/* {isEventModalOpen && (
-        <AddEventEditForm event={event} spaces={spaces}>
-        </AddEventEditForm>
-      )} */}
     </>
   )
 }

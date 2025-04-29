@@ -5,8 +5,7 @@ import { useEditEventModal } from '@/context/event-status'
 import AddEventEditForm from './edit-event-form'
 
 const EditModalContainer = () => {
-  const { isEventModalOpen, editingEvent, closeEventModal } =
-    useEditEventModal()
+  const { isEventModalOpen, editingEvent } = useEditEventModal()
 
   if (!isEventModalOpen || !editingEvent) return null
 

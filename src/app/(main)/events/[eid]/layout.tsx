@@ -23,7 +23,7 @@ export default async function EventDetailLayout({
       <BookingProvider>
         <EditModalProvider>{children}</EditModalProvider>
       </BookingProvider>
-      
+
       {session?.user.role == 'admin' && <AdminPanel />}
     </AdminCursorProvider>
   )

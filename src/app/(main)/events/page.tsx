@@ -8,7 +8,6 @@ import SpacesSkeleton from '@/components/spaces-skeleton'
 import EditEventModalProvider from '@/context/event-status'
 import { SpacesPageParams } from '@/interfaces/interface'
 import { fetchEvents } from '@/repo/events'
-import { fetchSpaces } from '@/repo/spaces'
 
 const EventsPage = async (props: {
   searchParams: Promise<SpacesPageParams>
@@ -23,7 +22,7 @@ const EventsPage = async (props: {
         <div className='flex flex-col gap-8'>
           <EditEventModalProvider>
             <EventsView events={events} />
-            <EditModalContainer></EditModalContainer>
+            <EditModalContainer />
           </EditEventModalProvider>
 
           {pagination.totalPages > 1 && (

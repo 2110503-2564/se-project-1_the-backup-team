@@ -1,41 +1,18 @@
 'use client'
-// import { useMemo } from 'react'
 
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import {
-  ArrowLeft,
-  MapPin,
-} from 'lucide-react'
-// import { Star } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { ArrowLeft, MapPin } from 'lucide-react'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-// import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardFooter,
-//   CardTitle,
-// } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-// import { useBooking } from '@/context/booking-context'
-// import { useEditModal } from '@/context/edited-status'
-// import { Attendance } from '@/interfaces/attendance.interface'
 import { Event } from '@/interfaces/event.interface'
-// import { Reservation } from '@/interfaces/reservation.interface'
 import { Space } from '@/interfaces/space.interface'
-// import { getSpaceById } from '@/repo/spaces'
 
 import BookingMenuSkeleton from './booking-menu-skeleton'
-// import CreateReview from './create-review'
-// import EditReview from './edit-review'
-// import ReviewBox from './review-box'
 
 const EventDetailClient = ({
   event,
@@ -44,10 +21,6 @@ const EventDetailClient = ({
   event: Event
   space: Space
 }) => {
-  //   const { setSelectedRoom } = useBooking()
-  //   const { isEdit } = useEditModal()
-  const { data: session } = useSession()
-
   const BookingEvent = dynamic(() => import('@/components/booking-event'), {
     loading: () => <BookingMenuSkeleton />,
     ssr: false,

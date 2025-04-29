@@ -85,7 +85,7 @@ export const createEvent = (eventData: {
 export const updateEvent = (
   id: string,
   event: Partial<Event>,
-  token: string
+  token: string,
   // name: string,
   // image: string,
   // description: string,

@@ -88,7 +88,7 @@ const EventCard = ({ event }: { event: Event }) => {
 
         <Button variant='outline' className='w-full mt-2 p-0'>
           <Link href={`/events/${event._id}`} className='w-full'>
-            View Details
+            view Details
           </Link>
         </Button>
       </CardFooter>
