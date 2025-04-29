@@ -51,7 +51,7 @@ const JoinEvents = () => {
               <div className='relative flex gap-4 p-6 overflow-y-scroll'>
                 {
                   attendances!.length === 0 ? (
-                    <>You haven't joined any events yet</>
+                    <>You haven&apos;t joined any events yet</>
                   ) : (
                     <>
                     {attendances!.map((attendance) => (

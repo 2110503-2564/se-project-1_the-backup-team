@@ -49,12 +49,11 @@ import { Space } from '@/interfaces/space.interface'
 import { deleteEvent } from '@/repo/events'
 
 import { useEditEventModal } from '@/context/event-status'
-import AddEventEditForm from './edit-event-form'
+// import AddEventEditForm from './edit-event-form'
 
 
-const EventsActions = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
+const EventsActions = ({ event }: { event: Event }) => {
   const router = useRouter()
-  const { isEventModalOpen } = useEditEventModal()
   const { openEventModal } = useEditEventModal()
 
 
@@ -78,6 +77,10 @@ const EventsActions = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
     }
   }
 
+  const handleUpdate = () => {
+    openEventModal(event)
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -91,7 +94,7 @@ const EventsActions = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
         <DropdownMenuContent align='end'>
           <DropdownMenuItem
             className='text-black-600'
-            onClick={() => {openEventModal()}}
+            onClick={handleUpdate}
           >
             <Edit className='mr-2 h-4 w-4 text-black-600' />
             Edit Event
@@ -109,10 +112,10 @@ const EventsActions = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {isEventModalOpen && (
+      {/* {isEventModalOpen && (
         <AddEventEditForm event={event} spaces={spaces}>
         </AddEventEditForm>
-      )}
+      )} */}
     </>
      
   )
