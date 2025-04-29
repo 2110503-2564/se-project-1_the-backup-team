@@ -24,7 +24,7 @@ const EventsPage = async (props: {
           </EditEventModalProvider>
           
           {pagination.totalPages > 1 && (
-            <PaginationBar currentPage={currentPage} pagination={pagination} />
+            <PaginationBar currentPage={currentPage} pagination={pagination} paginationFor='events' />
           )}
         </div>
       </Suspense>

@@ -19,7 +19,7 @@ const SpacesPage = async (props: {
         <div className='flex flex-col gap-8'>
           <SpacesView spaces={spaces} />
           {pagination.totalPages > 1 && (
-            <PaginationBar currentPage={currentPage} pagination={pagination} />
+            <PaginationBar currentPage={currentPage} pagination={pagination} paginationFor='spaces' />
           )}
         </div>
       </Suspense>
