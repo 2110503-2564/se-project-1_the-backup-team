@@ -66,15 +66,12 @@ const formSchema = z.object({
     .min(1, { message: "Host cannot be empty" }),
 
   capacity: z
-    .string({
-      required_error: "Capacity is required",
-      invalid_type_error: "Capacity must be a string",
-    })
-    .min(1, { message: "Capacity cannot be empty" })
-    .transform((val) => parseInt(val, 10))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: "Capacity must be a valid positive number",
-    }),
+  .number({
+    required_error: "Capacity is required",
+    invalid_type_error: "Capacity must be a number",
+  })
+  .int()
+  .min(1, { message: "Capacity must be greater than 0" }),
 
   startDate: z
     .string()
@@ -166,7 +163,6 @@ const AddEventEditForm = (
     } catch (e) {
       toast.error('Event update failed.')
     } finally {
-      form.reset()
       setOpen(false)
       setIsLoading(false)
     }
@@ -251,7 +247,12 @@ const AddEventEditForm = (
                     <FormItem>
                       <FormLabel>Capacity</FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter capacity' type="number" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="Enter capacity"
+                        value={field.value ?? ''}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
