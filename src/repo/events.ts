@@ -48,7 +48,19 @@ export const getEventById = (id: string) => {
 
 export const updateEvent = (
   id: string,
+  event: Partial<Event>,
   token: string
+  // name: string,
+  // image: string,
+  // description: string,
+  // space: {
+  //   id: string,
+  //   name: string
+  // },
+  // host: string,
+  // capacity: number,
+  // startDate: string,
+  // endDate: string
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
@@ -60,7 +72,7 @@ export const updateEvent = (
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          // body: JSON.stringify({ comment, rating }),
+          body: JSON.stringify(event),
           cache: 'no-store',
         },
       )

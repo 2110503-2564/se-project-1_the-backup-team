@@ -34,33 +34,58 @@ import { Input } from '@/components/ui/input'
 import { Space } from '@/interfaces/space.interface'
 import { Event } from '@/interfaces/event.interface'
 import { useEditEventModal } from '@/context/event-status'
+import { updateEvent } from '@/repo/events'
 
 const formSchema = z.object({
-  name: z.string(),
+  name: z
+    .string()
+    .min(1, {
+      message: "Name cannot be empty"
+   })
+    .max(50, {
+       message: "Must be 50 or fewer characters long"
+    }),
 
-  // space: z.string(),
-
-  description: z.string(),
-
-  host: z.string(),
-
-  capacity: z.number({
-    required_error: "Capacity is required",
-    invalid_type_error: "Capacity must be a number",
+  space: z.object({
+    _id: z.string(),
+    name: z.string(),
   }),
 
-  // status: z.string(),
+  description: z
+    .string({
+      required_error: "Description is required",
+      invalid_type_error: "Description must be a string",
+    })
+    .min(1, { message: "Description cannot be empty" }),
+
+  host: z
+    .string({
+      required_error: "Host is required",
+      invalid_type_error: "Host must be a string",
+    })
+    .min(1, { message: "Host cannot be empty" }),
+
+  capacity: z
+    .string({
+      required_error: "Capacity is required",
+      invalid_type_error: "Capacity must be a string",
+    })
+    .min(1, { message: "Capacity cannot be empty" })
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Capacity must be a valid positive number",
+    }),
 
   startDate: z
     .string()
-    .refine((value) => /^([0-1][0-9]|2[0-3])[0-5][0-9]$/.test(value), {
-      message: 'Invalid format HHmm',
+    .refine((value) => !isNaN(Date.parse(value)), {
+      message: 'Invalid ISO 8601 date-time string',
     }),
 
   endDate: z
   .string()
-  .refine((value) => /^([0-1][0-9]|2[0-3])[0-5][0-9]$/.test(value), {
-    message: 'Invalid format HHmm',
+  .refine((value) => !isNaN(Date.parse(value)), {
+    message: 'Invalid ISO 8601 date-time string',
   }),
 
   image: z
@@ -75,19 +100,16 @@ const formSchema = z.object({
       message: 'Image url must be a jpg',
     })
     .optional(),
-
-  attendee: z.number({
-    required_error: "Attendee is required",
-    invalid_type_error: "Attendee must be a number",
-  })
 })
 
 const AddEventEditForm = (
   {
     event,
+    spaces
   }: 
   {
     event: Event,
+    spaces: Space[]
   }
 ) => {
   const router = useRouter()
@@ -97,41 +119,40 @@ const AddEventEditForm = (
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const [name, setName] = useState(event.name);
+  // const [name, setName] = useState(event.name);
   const [originalName, _setOriginalName] = useState(event.name);
 
-  const [description, setDescription] = useState(event.description);
+  // const [description, setDescription] = useState(event.description);
   const [originalDescription, _setOriginalDescription] = useState(event.description);
 
-  const [image, setImage] = useState(event.image);
+  const [originalSpace, _setOriginalSpace] = useState(event.space);
+
+  // const [image, setImage] = useState(event.image);
   const [originalImage, _setOriginalImage] = useState(event.image);
 
-  const [host, setHost] = useState(event.host);
+  // const [host, setHost] = useState(event.host);
   const [originalHost, _setOriginalHost] = useState(event.host);
 
-  const [capacity, setCapacity] = useState(event.capacity);
+  // const [capacity, setCapacity] = useState(event.capacity);
   const [originalCapacity, _setOriginalCapacity] = useState(event.capacity);
 
-  const [startDate, setStartDate] = useState(event.startDate);
+  // const [startDate, setStartDate] = useState(event.startDate);
   const [originalStartDate, _setOriginalStartDate] = useState(event.startDate);
 
-  const [endDate, setEndDate] = useState(event.endDate);
+  // const [endDate, setEndDate] = useState(event.endDate);
   const [originalEndDate, _setOriginalEndDate] = useState(event.endDate);
-
-  const [attendee, setAttendee] = useState(event.attendee);
-  const [originalAttendee, _setOriginalAttendee] = useState(event.attendee);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: name,
-      image: image,
-      description: description,
-      host: host,
-      capacity: capacity,
-      startDate: startDate,
-      endDate: endDate,
-      attendee: attendee
+      name: originalName,
+      image: originalImage,
+      description: originalDescription,
+      host: originalHost,
+      space: originalSpace,
+      capacity: originalCapacity,
+      startDate: originalStartDate,
+      endDate: originalEndDate,
     },
   })
 
@@ -139,7 +160,7 @@ const AddEventEditForm = (
     setIsLoading(true)
     try {
       if (!session?.accessToken) throw new Error('Unauthorized')
-      // await addSpace(values, session.accessToken)
+      await updateEvent(event._id, values, session.accessToken)
       toast.success('Your event was successfully updated')
       router.refresh()
     } catch (e) {
@@ -153,7 +174,6 @@ const AddEventEditForm = (
 
   return (
     <Dialog open={isEventModalOpen} onOpenChange={(open) => { if (!open) closeEventModal() }}>
-      {/* <DialogTrigger asChild>{children}</DialogTrigger> */}
       <DialogContent className='sm:max-w-[550px]'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -163,7 +183,8 @@ const AddEventEditForm = (
               Please review and update your information below.
               </DialogDescription>
             </DialogHeader>
-            <div className='grid gap-5 py-4'>
+
+            <div className='grid gap-6 py-4'>
               <FormField
                 control={form.control}
                 name='name'
@@ -181,17 +202,18 @@ const AddEventEditForm = (
               <div className='grid grid-cols-2 gap-4'>
                 <FormField
                   control={form.control}
-                  name='description'
+                  name='host'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>Host</FormLabel>
                       <FormControl>
-                        <Input placeholder='Example description' {...field} />
+                        <Input placeholder='Your host' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name='image'
@@ -209,19 +231,19 @@ const AddEventEditForm = (
 
               <FormField
                 control={form.control}
-                name='host'
+                name='description'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Host</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input placeholder='Your host' {...field} />
+                      <Input placeholder='Example description' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div className='grid grid-cols-3 gap-4'>
+              <div className='grid grid-cols-2 gap-4'>
                 <FormField
                   control={form.control}
                   name='capacity'
@@ -229,26 +251,45 @@ const AddEventEditForm = (
                     <FormItem>
                       <FormLabel>Capacity</FormLabel>
                       <FormControl>
-                        <Input placeholder='0' {...field} />
+                        <Input placeholder='Enter capacity' type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                
                 <FormField
                   control={form.control}
-                  name='attendee'
+                  name='space'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Attendee</FormLabel>
+                      <FormLabel>Space</FormLabel>
                       <FormControl>
-                        <Input placeholder='0' {...field} />
+                      <select
+                        value={field.value?._id || ""}
+                        onChange={(e) => {
+                          const selectedId = e.target.value;
+                          const selectedSpace = spaces.find((s) => s._id === selectedId);
+                          field.onChange(selectedSpace);
+                        }}
+                        onBlur={field.onBlur}
+                        ref={field.ref}
+                        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                          <option value="">Select a Space</option>
+                          {spaces.map((space) => (
+                            <option key={space._id} value={space._id}>
+                              {space.name}
+                            </option>
+                          ))}
+                        </select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+              
               <div className='grid grid-cols-2 gap-4'>
                 <FormField
                   control={form.control}
@@ -257,12 +298,13 @@ const AddEventEditForm = (
                     <FormItem>
                       <FormLabel>Open</FormLabel>
                       <FormControl>
-                        <Input placeholder='2942025' {...field} />
+                        <Input placeholder='Enter Start Date' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name='endDate'
@@ -270,7 +312,7 @@ const AddEventEditForm = (
                     <FormItem>
                       <FormLabel>Close</FormLabel>
                       <FormControl>
-                        <Input placeholder='3042025' {...field} />
+                        <Input placeholder='Enter End Date' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

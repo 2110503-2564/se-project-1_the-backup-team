@@ -27,23 +27,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from '@/components/ui/popover'
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from '@/components/ui/select'
 
 import { Event } from '@/interfaces/event.interface'
-import { TimeSlots } from '@/interfaces/space.interface'
+import { Space } from '@/interfaces/space.interface'
+// import { TimeSlots } from '@/interfaces/space.interface'
 
-import { cn } from '@/lib/utils'
+// import { cn } from '@/lib/utils'
 
 import { deleteEvent } from '@/repo/events'
 
@@ -51,7 +52,7 @@ import { useEditEventModal } from '@/context/event-status'
 import AddEventEditForm from './edit-event-form'
 
 
-const EventsActions = ({ event }: { event: Event }) => {
+const EventsActions = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
 
   //const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
@@ -104,7 +105,7 @@ const EventsActions = ({ event }: { event: Event }) => {
         <DropdownMenuContent align='end'>
           <DropdownMenuItem
             className='text-black-600'
-            onClick={() => {openEventModal(); console.log(isEventModalOpen)}}
+            onClick={() => {openEventModal()}}
           >
             <Edit className='mr-2 h-4 w-4 text-black-600' />
             Edit Event
@@ -123,7 +124,7 @@ const EventsActions = ({ event }: { event: Event }) => {
       </DropdownMenu>
 
       {isEventModalOpen && (
-        <AddEventEditForm event={event}>
+        <AddEventEditForm event={event} spaces={spaces}>
         </AddEventEditForm>
       )}
     </>
