@@ -73,7 +73,7 @@ const JoinEvents = () => {
                               >
                                 <Image
                                   key={attendance.event._id}
-                                  src={'/spaces/placehold.jpg'}
+                                  src={'/events/placehold.jpg'}
                                   alt='Card Image'
                                   fill
                                   sizes='100'
