@@ -1,0 +1,20 @@
+[
+    {
+        "userId": "67fc55a3c6ada8934ea304e8",
+        "spaceId": "6570f10a5df9e76553e6a201",
+        "comment": "This space was amazing!",
+        "rating": 4
+    },
+    {
+        "userId": "67fcce716750000229c874a6",
+        "spaceId": "6570f10a5df9e76553e6a201",
+        "comment": "I love this space!",
+        "rating": 5
+    },
+    {
+        "userId": "67fd285afadfd317e37b6546",
+        "spaceId": "6570f10a5df9e76553e6a202",
+        "comment": "This space is too small",
+        "rating": 2
+    }
+]
