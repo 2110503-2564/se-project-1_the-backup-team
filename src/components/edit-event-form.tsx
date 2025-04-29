@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
+import { format } from 'date-fns'
+import { Box, CalendarIcon, Clock, Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { DateRange } from 'react-day-picker'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -19,7 +21,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
   Form,
@@ -30,20 +31,36 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-
-import { Space } from '@/interfaces/space.interface'
-import { Event } from '@/interfaces/event.interface'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useEditEventModal } from '@/context/event-status'
+import { Event } from '@/interfaces/event.interface'
+import { Space } from '@/interfaces/space.interface'
+import { cn } from '@/lib/utils'
 import { updateEvent } from '@/repo/events'
+import { fetchSpaces } from '@/repo/spaces'
+
+import { Calendar } from './ui/calendar'
+import { Textarea } from './ui/textarea'
 
 const formSchema = z.object({
   name: z
     .string()
     .min(1, {
-      message: "Name cannot be empty"
-   })
+      message: 'Name cannot be empty',
+    })
     .max(50, {
-       message: "Must be 50 or fewer characters long"
+      message: 'Must be 50 or fewer characters long',
     }),
 
   space: z.object({
@@ -53,38 +70,33 @@ const formSchema = z.object({
 
   description: z
     .string({
-      required_error: "Description is required",
-      invalid_type_error: "Description must be a string",
+      required_error: 'Description is required',
+      invalid_type_error: 'Description must be a string',
     })
-    .min(1, { message: "Description cannot be empty" }),
+    .min(1, { message: 'Description cannot be empty' }),
 
   host: z
     .string({
-      required_error: "Host is required",
-      invalid_type_error: "Host must be a string",
+      required_error: 'Host is required',
+      invalid_type_error: 'Host must be a string',
     })
-    .min(1, { message: "Host cannot be empty" }),
+    .min(1, { message: 'Host cannot be empty' }),
 
   capacity: z
-  .number({
-    required_error: "Capacity is required",
-    invalid_type_error: "Capacity must be a number",
-  })
-  .int()
-  .min(1, { message: "Capacity must be greater than 0" }),
+    .number({
+      required_error: 'Capacity is required',
+      invalid_type_error: 'Capacity must be a number',
+    })
+    .int()
+    .min(1, { message: 'Capacity must be greater than 0' }),
 
-  startDate: z
-    .string()
-    .refine((value) => !isNaN(Date.parse(value)), {
-      message: 'Invalid ISO 8601 date-time string',
-    }),
-
-  endDate: z
-  .string()
-  .refine((value) => !isNaN(Date.parse(value)), {
+  startDate: z.string().refine((value) => !isNaN(Date.parse(value)), {
     message: 'Invalid ISO 8601 date-time string',
   }),
 
+  endDate: z.string().refine((value) => !isNaN(Date.parse(value)), {
+    message: 'Invalid ISO 8601 date-time string',
+  }),
   image: z
     .string()
     .min(2, {
@@ -97,47 +109,62 @@ const formSchema = z.object({
       message: 'Image url must be a jpg',
     })
     .optional(),
+  dateRange: z
+    .object({
+      from: z.date().optional(),
+      to: z.date().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.from === undefined || data.to === undefined) {
+        return ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select a date range.',
+        })
+      }
+      return data
+    }),
+  startTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+    message: 'Time must be in the format hh:mm',
+  }),
+  endTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+    message: 'Time must be in the format hh:mm',
+  }),
 })
 
-const AddEventEditForm = (
-  {
-    event,
-    spaces
-  }: 
-  {
-    event: Event,
-    spaces: Space[]
-  }
-) => {
+const AddEventEditForm = ({ event }: { event: Event }) => {
   const router = useRouter()
   const { isEventModalOpen, closeEventModal } = useEditEventModal()
 
+  const fromDate = new Date()
+
   const { data: session } = useSession()
-  const [open, setOpen] = useState(false)
+  const [_open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   // const [name, setName] = useState(event.name);
-  const [originalName, _setOriginalName] = useState(event.name);
+  const [originalName, _setOriginalName] = useState(event.name)
 
   // const [description, setDescription] = useState(event.description);
-  const [originalDescription, _setOriginalDescription] = useState(event.description);
+  const [originalDescription, _setOriginalDescription] = useState(
+    event.description,
+  )
 
-  const [originalSpace, _setOriginalSpace] = useState(event.space);
+  const [originalSpace, _setOriginalSpace] = useState(event.space)
 
   // const [image, setImage] = useState(event.image);
-  const [originalImage, _setOriginalImage] = useState(event.image);
+  const [originalImage, _setOriginalImage] = useState(event.image)
 
   // const [host, setHost] = useState(event.host);
-  const [originalHost, _setOriginalHost] = useState(event.host);
+  const [originalHost, _setOriginalHost] = useState(event.host)
 
   // const [capacity, setCapacity] = useState(event.capacity);
-  const [originalCapacity, _setOriginalCapacity] = useState(event.capacity);
+  const [originalCapacity, _setOriginalCapacity] = useState(event.capacity)
 
   // const [startDate, setStartDate] = useState(event.startDate);
-  const [originalStartDate, _setOriginalStartDate] = useState(event.startDate);
+  const [originalStartDate, _setOriginalStartDate] = useState(event.startDate)
 
   // const [endDate, setEndDate] = useState(event.endDate);
-  const [originalEndDate, _setOriginalEndDate] = useState(event.endDate);
+  const [originalEndDate, _setOriginalEndDate] = useState(event.endDate)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -150,36 +177,86 @@ const AddEventEditForm = (
       capacity: originalCapacity,
       startDate: originalStartDate,
       endDate: originalEndDate,
+      dateRange: {
+        from: new Date(originalStartDate),
+        to: new Date(originalEndDate),
+      },
+      startTime: format(originalStartDate, 'hh:mm'),
+      endTime: format(originalEndDate, 'hh:mm'),
     },
+  })
+
+  const timeslots = Array.from({ length: 48 }, (_, i) => {
+    const hour = Math.floor(i / 2)
+      .toString()
+      .padStart(2, '0')
+    const minute = i % 2 === 0 ? '00' : '30'
+    return {
+      time: `${hour}:${minute}`,
+      available: true,
+    }
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     try {
       if (!session?.accessToken) throw new Error('Unauthorized')
+      if (!values.dateRange || !values.dateRange.from || !values.dateRange.to)
+        return
+
+      const startHours = parseInt(values.startTime.substring(0, 2))
+      const startMinutes = parseInt(values.startTime.substring(3, 5))
+
+      values.dateRange.from.setHours(startHours)
+      values.dateRange.from.setMinutes(startMinutes)
+
+      const endHours = parseInt(values.endTime.substring(0, 2))
+      const endMinutes = parseInt(values.endTime.substring(3, 5))
+
+      values.dateRange.to.setHours(endHours)
+      values.dateRange.to.setMinutes(endMinutes)
+
+      values.startDate = values.dateRange.from.toISOString()
+      values.endDate = values.dateRange.to.toISOString()
+
       await updateEvent(event._id, values, session.accessToken)
+
       toast.success('Your event was successfully updated')
       router.refresh()
     } catch (e) {
-
       console.log(e)
-      
+
       toast.error('Event update failed.')
     } finally {
       setOpen(false)
       setIsLoading(false)
     }
   }
+  const [spaces, setSpaces] = useState<Space[]>([])
+
+  useEffect(() => {
+    const fetchSelectSpace = async () => {
+      const result = await fetchSpaces(0, 10000)
+      setSpaces(result.spaces)
+    }
+
+    fetchSelectSpace()
+  }, [])
 
   return (
-    <Dialog open={isEventModalOpen} onOpenChange={(open) => { if (!open) closeEventModal() }}>
+    <Dialog
+      open={isEventModalOpen}
+      onOpenChange={(open) => {
+        if (!open) closeEventModal()
+      }}
+    >
       <DialogContent className='sm:max-w-[550px]'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>Update Details</DialogTitle>
               <DialogDescription>
-              Please review and update your information below.
+                Please review and update your information below.
               </DialogDescription>
             </DialogHeader>
 
@@ -235,7 +312,11 @@ const AddEventEditForm = (
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input placeholder='Example description' {...field} />
+                      <Textarea
+                        placeholder='Example description'
+                        {...field}
+                        className='h-32'
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -250,58 +331,14 @@ const AddEventEditForm = (
                     <FormItem>
                       <FormLabel>Capacity</FormLabel>
                       <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Enter capacity"
-                        value={field.value ?? ''}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                      />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name='space'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Space</FormLabel>
-                      <FormControl>
-                      <select
-                        value={field.value?._id || ""}
-                        onChange={(e) => {
-                          const selectedId = e.target.value;
-                          const selectedSpace = spaces.find((s) => s._id === selectedId);
-                          field.onChange(selectedSpace);
-                        }}
-                        onBlur={field.onBlur}
-                        ref={field.ref}
-                        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                          {spaces.map((space) => (
-                            <option key={space._id} value={space._id}>
-                              {space.name}
-                            </option>
-                          ))}
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <div className='grid grid-cols-2 gap-4'>
-                <FormField
-                  control={form.control}
-                  name='startDate'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Open</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Enter Start Date' {...field} />
+                        <Input
+                          type='number'
+                          placeholder='Enter capacity'
+                          value={field.value ?? ''}
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -310,17 +347,168 @@ const AddEventEditForm = (
 
                 <FormField
                   control={form.control}
-                  name='endDate'
+                  name='space'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Close</FormLabel>
+                      <FormLabel>Space</FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter End Date' {...field} />
+                        <div className='rounded-md basis-1/2'>
+                          <Select
+                            value={field.value._id || ''}
+                            onValueChange={field.onChange}
+                            required
+                          >
+                            <SelectTrigger className='w-full cursor-pointer'>
+                              <SelectValue
+                                placeholder={
+                                  <div className='w-full flex items-center gap-2'>
+                                    <Box />
+                                    Space
+                                  </div>
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent className='max-h-64'>
+                              {spaces.map((t) => (
+                                <SelectItem key={t.name} value={t._id}>
+                                  {t.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+
+              <FormField
+                control={form.control}
+                name='dateRange'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date range</FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <div className='w-full'>
+                            <Button
+                              variant={'outline'}
+                              type='button'
+                              className={cn(
+                                'w-full justify-start text-left font-normal cursor-pointer',
+                                !field.value && 'text-muted-foreground',
+                              )}
+                            >
+                              <CalendarIcon />
+                              {field.value?.from ? (
+                                field.value.to ? (
+                                  <>
+                                    {format(field.value.from, 'LLL dd, y')} -{' '}
+                                    {format(field.value.to, 'LLL dd, y')}
+                                  </>
+                                ) : (
+                                  format(field.value.from, 'LLL dd, y')
+                                )
+                              ) : (
+                                <span>Pick a date range</span>
+                              )}
+                            </Button>
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent className='w-auto p-0' align='start'>
+                          <Calendar
+                            fromDate={fromDate}
+                            selected={field.value as DateRange}
+                            onSelect={field.onChange}
+                            mode='range'
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className='flex gap-2 items-center'>
+                <div className='rounded-md basis-1/2'>
+                  <FormField
+                    control={form.control}
+                    name='startTime'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Start time</FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            required
+                          >
+                            <SelectTrigger className='w-full cursor-pointer'>
+                              <SelectValue
+                                placeholder={
+                                  <div className='w-full flex items-center gap-2'>
+                                    <Clock />
+                                    Start time
+                                  </div>
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent className='max-h-64'>
+                              {timeslots.map((t) => (
+                                <SelectItem key={t.time} value={t.time}>
+                                  {t.time}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className='rounded-md basis-1/2'>
+                  <FormField
+                    control={form.control}
+                    name='endTime'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>End time</FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            required
+                          >
+                            <SelectTrigger className='w-full cursor-pointer'>
+                              <SelectValue
+                                placeholder={
+                                  <div className='w-full flex items-center gap-2'>
+                                    <Clock />
+                                    End time
+                                  </div>
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent className='max-h-64'>
+                              {timeslots.map((t) => (
+                                <SelectItem key={t.time} value={t.time}>
+                                  {t.time}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
             <DialogFooter className='mt-6'>
@@ -335,7 +523,7 @@ const AddEventEditForm = (
                     Updating the event...
                   </>
                 ) : (
-                  'Update review'
+                  'Update event'
                 )}
               </Button>
             </DialogFooter>
