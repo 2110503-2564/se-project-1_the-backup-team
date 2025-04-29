@@ -1,3 +1,4 @@
+import { LucideIcon } from 'lucide-react'
 import { Session } from 'next-auth'
 
 import { Reservation } from '@/interfaces/reservation.interface'
@@ -24,6 +25,7 @@ export interface ReservationsPageParams {
 export interface MainNavItem {
   title: string
   href: string
+  icon: LucideIcon
 }
 
 export interface CommandsConfig {

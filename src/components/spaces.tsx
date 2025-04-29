@@ -22,7 +22,7 @@ const SpacesView = async ({ spaces }: { spaces: Space[] }) => {
       {spaces.map((space) => (
         <Card
           key={space._id}
-          className='w-full rounded-lg overflow-hidden shadow-md pt-0 min-h-[30rem]'
+          className='w-full rounded-lg overflow-hidden shadow-md pt-0 min-h-[25rem] md:min-h-[30rem]'
         >
           <div className='relative bg-muted block'>
             <AspectRatio ratio={16 / 9}>
@@ -44,8 +44,10 @@ const SpacesView = async ({ spaces }: { spaces: Space[] }) => {
                 {space.name}
               </CardTitle>
               <CardDescription className='flex gap-1 items-center text-muted-foreground'>
-                <MapPin className='w-4 h-4' />
-                {`${space.address}, ${space.district}, ${space.province}`}
+                <MapPin className='size-4' />
+                <div className='truncate'>
+                  {`${space.address}, ${space.district}, ${space.province}`}
+                </div>
               </CardDescription>
             </div>
           </CardContent>
@@ -53,7 +55,7 @@ const SpacesView = async ({ spaces }: { spaces: Space[] }) => {
             <div className='flex flex-col justify-between items-start w-full space-y-4'>
               <div className='flex w-full items-center justify-between'>
                 <div className='text-gray-500 text-sm flex gap-1 items-center'>
-                  <Clock className='w-4 h-4' />
+                  <Clock className='size-4' />
                   {`${space.opentime.slice(0, 2)}:${space.opentime.slice(2)} - ${space.closetime.slice(0, 2)}:${space.closetime.slice(2)}`}
                 </div>
                 <div className='text-gray-500 text-sm flex gap-1 items-center'>
