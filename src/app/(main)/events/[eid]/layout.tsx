@@ -17,14 +17,14 @@ export default async function EventDetailLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions)
+  // const session = await getServerSession(authOptions)
   return (
     <AdminCursorProvider>
       <BookingProvider>
         <EditModalProvider>{children}</EditModalProvider>
       </BookingProvider>
 
-      {session?.user.role == 'admin' && <AdminPanel />}
+      {/* {session?.user.role == 'admin' && <AdminPanel />} */}
     </AdminCursorProvider>
   )
 }
