@@ -141,29 +141,22 @@ const AddEventEditForm = ({ event }: { event: Event }) => {
   const [_open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // const [name, setName] = useState(event.name);
   const [originalName, _setOriginalName] = useState(event.name)
 
-  // const [description, setDescription] = useState(event.description);
   const [originalDescription, _setOriginalDescription] = useState(
     event.description,
   )
 
   const [originalSpace, _setOriginalSpace] = useState(event.space)
 
-  // const [image, setImage] = useState(event.image);
   const [originalImage, _setOriginalImage] = useState(event.image)
 
-  // const [host, setHost] = useState(event.host);
   const [originalHost, _setOriginalHost] = useState(event.host)
 
-  // const [capacity, setCapacity] = useState(event.capacity);
   const [originalCapacity, _setOriginalCapacity] = useState(event.capacity)
 
-  // const [startDate, setStartDate] = useState(event.startDate);
   const [originalStartDate, _setOriginalStartDate] = useState(event.startDate)
 
-  // const [endDate, setEndDate] = useState(event.endDate);
   const [originalEndDate, _setOriginalEndDate] = useState(event.endDate)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -203,6 +196,8 @@ const AddEventEditForm = ({ event }: { event: Event }) => {
       if (!session?.accessToken) throw new Error('Unauthorized')
       if (!values.dateRange || !values.dateRange.from || !values.dateRange.to)
         return
+      if (values.capacity < event.attendee)
+        return toast.error('Capacity must be greater than or equal to attendee')
 
       const startHours = parseInt(values.startTime.substring(0, 2))
       const startMinutes = parseInt(values.startTime.substring(3, 5))
