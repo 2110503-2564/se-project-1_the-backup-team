@@ -27,7 +27,7 @@ const EventCard = ({ event }: { event: Event }) => {
         <AspectRatio ratio={16 / 9}>
           <Suspense fallback={<div className='bg-black size-full'></div>}>
             <Image
-              src={`/events/${event.image}`}
+              src={`/events${event.image}`}
               alt='Card Image'
               fill
               loading='eager'

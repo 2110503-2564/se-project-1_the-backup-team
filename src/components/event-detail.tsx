@@ -66,7 +66,7 @@ const EventDetailClient = ({
         <div className='lg:col-span-2'>
           <AspectRatio ratio={16 / 9}>
             <Image
-              src={`/events/${event.image}`}
+              src={`/events${event.image}`}
               alt='Card Image'
               fill
               priority

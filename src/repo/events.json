@@ -1,0 +1,33 @@
+[
+
+    {
+        "name": "Startup Grind: Bangkok - Founder Stories",
+        "space": "6570f10a5df9e76553e6a201",
+        "description": "Hear inspiring stories and insights from local startup founders. Connect with entrepreneurs, investors, and mentors in Bangkok's vibrant startup ecosystem.",
+        "host": "Startup Grind Bangkok",
+        "capacity": 100,
+        "startDate": "2025-07-05T19:00:00.000Z",
+        "endDate": "2025-07-05T21:30:00.000Z",
+        "image": "/placeholder.jpg"
+    },
+    {
+        "name": "Tech Talk Night: Future of AI in Marketing",
+        "space": "6570f10a5df9e76553e6a201",
+        "description": "Join us for an insightful evening discussing the transformative role of Artificial Intelligence in the future of marketing. Network with industry professionals and learn about the latest trends.",
+        "host": "Bangkok Tech Community",
+        "capacity": 80,
+        "startDate": "2025-05-22T18:30:00.000Z",
+        "endDate": "2025-05-22T21:00:00.000Z",
+        "image": "/placeholder.jpg"
+    },
+    {
+        "name": "Freelancer Meetup: Level Up Your Pitch",
+        "space": "6570f10a5df9e76553e6a201",
+        "description": "Connect with fellow freelancers in Bangkok and join our interactive workshop on crafting compelling pitches that win clients. Share experiences and grow your network.",
+        "host": "Freelance Hub Thailand",
+        "capacity": 40,
+        "startDate": "2025-06-10T14:00:00.000Z",
+        "endDate": "2025-06-10T17:00:00.000Z",
+        "image": "/placeholder.jpg"
+    }
+]
