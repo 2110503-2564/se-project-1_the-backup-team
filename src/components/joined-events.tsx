@@ -21,39 +21,34 @@ import { cn } from '@/lib/utils'
 import { getAttendanceById } from '@/repo/attendance'
 
 const JoinEvents = () => {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
 
-  async function fetchEvents () {
-    if (session?.accessToken) {
-      const response = await getAttendanceById(session?.accessToken)
-      setAttendances (response)
-    }
-  }
-
-  const [attendances, setAttendances] = useState<Attendance[]>(); 
+  const [attendances, setAttendances] = useState<Attendance[]>()
 
   useEffect(() => {
+    async function fetchEvents() {
+      if (!session || !session.accessToken) return
+      const response = await getAttendanceById(session.accessToken)
+      setAttendances(response)
+    }
+
     fetchEvents()
-  }, [])
+  }, [session])
 
   try {
-
     return (
       <div id='featured-events' className='scroll-mt-14'>
         <div className='flex flex-col items-center py-12'>
           <div className='w-full'>
             <div className='flex relative items-center justify-between gap-4 mb-4 ml-2 w-auto'>
-              <p className='text-xl sm:text-md font-semibold'>
-                Joined Events
-              </p>
+              <p className='text-xl sm:text-md font-semibold'>Joined Events</p>
             </div>
             <div className='relative w-full rounded-md border inset-shadow-sm'>
               <div className='relative flex gap-4 p-6 overflow-y-scroll'>
-                {
-                  attendances!.length === 0 ? (
-                    <>You haven&apos;t joined any events yet</>
-                  ) : (
-                    <>
+                {attendances!.length === 0 ? (
+                  <>You haven&apos;t joined any events yet</>
+                ) : (
+                  <>
                     {attendances!.map((attendance) => (
                       <Link
                         key={attendance.event._id}
@@ -104,23 +99,31 @@ const JoinEvents = () => {
                                 <div
                                   className={cn(
                                     'text-sm flex gap-1 items-center',
-                                    attendance.event.attendee < attendance.event.capacity
+                                    attendance.event.attendee <
+                                      attendance.event.capacity
                                       ? 'text-green-700'
                                       : 'text-red-700',
                                   )}
                                 >
                                   <Users className='size-4' />
-                                  {attendance.event.attendee} / {attendance.event.capacity}
+                                  {attendance.event.attendee} /{' '}
+                                  {attendance.event.capacity}
                                 </div>
-    
+
                                 <div className='flex flex-col gap-1 items-start text-gray-500 text-sm'>
                                   <div className='flex gap-1 items-center'>
                                     <Calendar className='size-4' />
-                                    {format(attendance.event.startDate, 'dd.MM.yy')}
+                                    {format(
+                                      attendance.event.startDate,
+                                      'dd.MM.yy',
+                                    )}
                                   </div>
                                   <div className='flex gap-1 items-center justify-between'>
                                     <Clock className='size-4' />
-                                    {format(attendance.event.startDate, 'HH:mm')}
+                                    {format(
+                                      attendance.event.startDate,
+                                      'HH:mm',
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -129,9 +132,8 @@ const JoinEvents = () => {
                         </Card>
                       </Link>
                     ))}
-                    </>
-                  )
-                }
+                  </>
+                )}
               </div>
             </div>
           </div>

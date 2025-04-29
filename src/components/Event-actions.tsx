@@ -1,25 +1,13 @@
 'use client'
-import { MouseEvent, useEffect, useState } from 'react'
+import { useState } from 'react'
 
-// import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation'
-// import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
-// import { format } from 'date-fns'
-import { CalendarIcon, Clock, Edit, Eye, MoreHorizontal, X } from 'lucide-react'
+import { Edit, MoreHorizontal, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-// import { Calendar } from '@/components/ui/calendar'
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from '@/components/ui/dialog'
+import ConfirmBox from '@/components/ui/confirmbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,31 +15,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import ConfirmBox from '@/components/ui/confirmbox'
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from '@/components/ui/popover'
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from '@/components/ui/select'
-
-import { Event } from '@/interfaces/event.interface'
-import { Space } from '@/interfaces/space.interface'
-// import { TimeSlots } from '@/interfaces/space.interface'
-
-// import { cn } from '@/lib/utils'
-
-import { deleteEvent } from '@/repo/events'
-
 import { useEditEventModal } from '@/context/event-status'
-// import AddEventEditForm from './edit-event-form'
-
+import { Event } from '@/interfaces/event.interface'
+import { deleteEvent } from '@/repo/events'
 
 const EventsActions = ({ event }: { event: Event }) => {
   const router = useRouter()
@@ -60,9 +26,7 @@ const EventsActions = ({ event }: { event: Event }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await deleteEvent(
-        event._id,
-      )
+      const response = await deleteEvent(event._id)
 
       if (!response.success) {
         toast.error(response.message || 'Failed to delete this event')
@@ -93,10 +57,7 @@ const EventsActions = ({ event }: { event: Event }) => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
-          <DropdownMenuItem
-            className='text-black-600'
-            onClick={handleUpdate}
-          >
+          <DropdownMenuItem className='text-black-600' onClick={handleUpdate}>
             <Edit className='mr-2 h-4 w-4 text-black-600' />
             Edit Event
           </DropdownMenuItem>
@@ -117,20 +78,14 @@ const EventsActions = ({ event }: { event: Event }) => {
 
       {showConfirm && (
         <ConfirmBox
-          question='Are you sure you want to delete this review?'
+          question='Are you sure you want to delete this event?'
           confirmColor='bg-red-500'
           cancelColor='bg-gray-500'
           onConfirm={handleDelete}
           onCancel={() => setShowConfirm(false)}
         />
       )}
-
-      {/* {isEventModalOpen && (
-        <AddEventEditForm event={event} spaces={spaces}>
-        </AddEventEditForm>
-      )} */}
     </>
-     
   )
 }
 

@@ -12,11 +12,11 @@ import { PaginationFor } from '@/types/types'
 const PaginationBar = ({
   currentPage,
   pagination,
-  paginationFor
+  paginationFor,
 }: {
   currentPage: number
   pagination: PaginationType
-  paginationFor : PaginationFor
+  paginationFor: PaginationFor
 }) => {
   return (
     <Pagination className='w-full'>
@@ -26,7 +26,9 @@ const PaginationBar = ({
             pagination.hasPrevPage ? '' : 'pointer-events-none opacity-50 '
           }
         >
-          <PaginationPrevious href={`/${paginationFor}?page=${pagination.page - 1}`} />
+          <PaginationPrevious
+            href={`/${paginationFor}?page=${pagination.page - 1}`}
+          />
         </PaginationItem>
 
         {(() => {
@@ -71,7 +73,9 @@ const PaginationBar = ({
             pagination.hasNextPage ? '' : 'pointer-events-none opacity-50 '
           }
         >
-          <PaginationNext href={`/${paginationFor}?page=${pagination.page + 1}`} />
+          <PaginationNext
+            href={`/${paginationFor}?page=${pagination.page + 1}`}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
