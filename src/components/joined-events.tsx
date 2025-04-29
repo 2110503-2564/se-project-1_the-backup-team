@@ -48,7 +48,7 @@ const JoinEvents = () => {
               </p>
             </div>
             <div className='relative w-full rounded-md border inset-shadow-sm'>
-              <div className='relative flex gap-4 p-6'>
+              <div className='relative flex gap-4 p-6 overflow-y-scroll'>
                 {
                   attendances!.length === 0 ? (
                     <>You haven't joined any events yet</>
@@ -86,7 +86,7 @@ const JoinEvents = () => {
                           <CardContent className='space-y-4'>
                             <div className='space-y-1'>
                               <CardTitle className='text-xl font-bold truncate'>
-                                <div className='flex gap-2 items-center w-full max-w-[375px]'>
+                                <div className='flex gap-2 items-center w-full max-w-[325px]'>
                                   <span className='truncate'>
                                     {attendance.event.name}
                                   </span>
