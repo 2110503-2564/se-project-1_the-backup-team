@@ -27,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import ConfirmBox from '@/components/ui/confirmbox'
 // import {
 //   Popover,
 //   PopoverContent,
@@ -55,11 +56,9 @@ import { useEditEventModal } from '@/context/event-status'
 const EventsActions = ({ event }: { event: Event }) => {
   const router = useRouter()
   const { openEventModal } = useEditEventModal()
+  const [showConfirm, setShowConfirm] = useState(false)
 
-
-  const handleDelete = async (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault()
-
+  const handleDelete = async () => {
     try {
       const response = await deleteEvent(
         event._id,
@@ -74,6 +73,8 @@ const EventsActions = ({ event }: { event: Event }) => {
       router.refresh()
     } catch (e) {
       toast.error('Something went wrong!')
+    } finally {
+      setShowConfirm(false)
     }
   }
 
@@ -104,13 +105,25 @@ const EventsActions = ({ event }: { event: Event }) => {
 
           <DropdownMenuItem
             className='text-red-600'
-            onClick={handleDelete}
+            onClick={() => {
+              setShowConfirm(true)
+            }}
           >
             <X className='mr-2 h-4 w-4 text-red-600' />
             Delete Event
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {showConfirm && (
+        <ConfirmBox
+          question='Are you sure you want to delete this review?'
+          confirmColor='bg-red-500'
+          cancelColor='bg-gray-500'
+          onConfirm={handleDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
 
       {/* {isEventModalOpen && (
         <AddEventEditForm event={event} spaces={spaces}>
