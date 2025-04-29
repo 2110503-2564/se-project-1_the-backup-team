@@ -161,6 +161,9 @@ const AddEventEditForm = (
       toast.success('Your event was successfully updated')
       router.refresh()
     } catch (e) {
+
+      console.log(e)
+      
       toast.error('Event update failed.')
     } finally {
       setOpen(false)

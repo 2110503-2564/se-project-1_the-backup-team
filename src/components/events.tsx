@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/card'
 
 import { Event } from '@/interfaces/event.interface'
-import { Space } from '@/interfaces/space.interface'
+// import { Space } from '@/interfaces/space.interface'
 
 import { cn } from '@/lib/utils'
 
@@ -25,7 +25,7 @@ import EventsActions from './Event-actions'
 import JoinEvents from './joined-events'
 import { fetchSpaces } from '@/repo/spaces'
 
-const EventCard = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
+const EventCard = ({ event }: { event: Event }) => {
 
   return (
     <Card className='w-full rounded-lg overflow-hidden shadow-md pt-0 min-h-[25rem] md:min-h-[30rem]'>
@@ -51,7 +51,7 @@ const EventCard = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
             </CardTitle>
             <div className={cn('flex items-center gap-1 text-sm')}>
               <div className='text-black'>
-                <EventsActions event={event} spaces={spaces}></EventsActions>
+                <EventsActions event={event}></EventsActions>
               </div>
             </div>
           </div>
@@ -110,7 +110,7 @@ const EventsView = async ({ events }: { events: Event[] }) => {
       <p className='text-xl sm:text-md font-semibold'>Other Events</p>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:grid-rows-2'>
         {events.map((event) => (
-          <EventCard key={event._id} event={event} spaces={spaces}/>
+          <EventCard key={event._id} event={event}/>
         ))}
       </div>
     </>
