@@ -15,12 +15,15 @@ import {
   CardFooter,
   CardTitle,
 } from '@/components/ui/card'
+
 import { Event } from '@/interfaces/event.interface'
+
 import { cn } from '@/lib/utils'
 import JoinEvents from './joined-events'
 import EventsActions from './Event-actions'
 
 const EventCard = ({ event }: { event: Event }) => {
+
   return (
     <Card className='w-full rounded-lg overflow-hidden shadow-md pt-0 min-h-[25rem] md:min-h-[30rem]'>
       <div className='relative bg-muted block'>

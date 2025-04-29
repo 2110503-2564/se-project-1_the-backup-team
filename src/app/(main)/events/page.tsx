@@ -6,6 +6,7 @@ import PaginationBar from '@/components/pagination'
 import SpacesSkeleton from '@/components/spaces-skeleton'
 import { SpacesPageParams } from '@/interfaces/interface'
 import { fetchEvents } from '@/repo/events'
+import EditEventModalProvider from '@/context/event-status'
 
 const EventsPage = async (props: {
   searchParams: Promise<SpacesPageParams>
@@ -18,7 +19,10 @@ const EventsPage = async (props: {
     return (
       <Suspense fallback={<SpacesSkeleton />}>
         <div className='flex flex-col gap-8'>
-          <EventsView events={events} />
+          <EditEventModalProvider>
+            <EventsView events={events} />
+          </EditEventModalProvider>
+          
           {pagination.totalPages > 1 && (
             <PaginationBar currentPage={currentPage} pagination={pagination} />
           )}

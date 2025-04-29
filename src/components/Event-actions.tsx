@@ -2,11 +2,11 @@
 import { MouseEvent, useEffect, useState } from 'react'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 import { format } from 'date-fns'
-import { CalendarIcon, Clock, Eye, MoreHorizontal, X } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { CalendarIcon, Clock, Edit, Eye, MoreHorizontal, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -39,20 +39,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+
 import { Event } from '@/interfaces/event.interface'
 import { TimeSlots } from '@/interfaces/space.interface'
+
 import { cn } from '@/lib/utils'
+
 import { deleteEvent } from '@/repo/events'
+
+import { useEditEventModal } from '@/context/event-status'
+import AddEventEditForm from './edit-event-form'
 
 
 const EventsActions = ({ event }: { event: Event }) => {
 
   //const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
+  const { isEventModalOpen } = useEditEventModal()
+  const { openEventModal } = useEditEventModal()
+
 
   const handleDelete = async (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
-    
 
     try {
       const response = await deleteEvent(
@@ -64,19 +72,27 @@ const EventsActions = ({ event }: { event: Event }) => {
         return
       }
 
-      toast.success('Event deleted')
+      toast.success('Your event was successfully deleted')
       router.refresh()
     } catch (e) {
       toast.error('Something went wrong!')
     }
   }
 
-  const handleUpdate = async (e: MouseEvent<HTMLButtonElement>) => {
-    //todo...
-  }
+  // const handleUpdate = async (e: MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault()
+
+  //   try {
+
+  //     toast.success('Your event was successfully updated')
+  //     router.refresh()
+  //   } catch (e) {
+  //     toast.error('Something went wrong!')
+  //   }
+  // }
 
   return (
-    
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className='h-full'>
@@ -86,10 +102,16 @@ const EventsActions = ({ event }: { event: Event }) => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
-
-            {/* {Add more here} */}
+          <DropdownMenuItem
+            className='text-black-600'
+            onClick={() => {openEventModal(); console.log(isEventModalOpen)}}
+          >
+            <Edit className='mr-2 h-4 w-4 text-black-600' />
+            Edit Event
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
+
           <DropdownMenuItem
             className='text-red-600'
             onClick={handleDelete}
@@ -99,6 +121,12 @@ const EventsActions = ({ event }: { event: Event }) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {isEventModalOpen && (
+        <AddEventEditForm event={event}>
+        </AddEventEditForm>
+      )}
+    </>
      
   )
 }
