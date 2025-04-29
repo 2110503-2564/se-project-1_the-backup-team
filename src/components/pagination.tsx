@@ -7,13 +7,16 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 import { Pagination as PaginationType } from '@/interfaces/interface'
+import { PaginationFor } from '@/types/types'
 
 const PaginationBar = ({
   currentPage,
   pagination,
+  paginationFor,
 }: {
   currentPage: number
   pagination: PaginationType
+  paginationFor: PaginationFor
 }) => {
   return (
     <Pagination className='w-full'>
@@ -23,7 +26,9 @@ const PaginationBar = ({
             pagination.hasPrevPage ? '' : 'pointer-events-none opacity-50 '
           }
         >
-          <PaginationPrevious href={`/spaces?page=${pagination.page - 1}`} />
+          <PaginationPrevious
+            href={`/${paginationFor}?page=${pagination.page - 1}`}
+          />
         </PaginationItem>
 
         {(() => {
@@ -54,7 +59,7 @@ const PaginationBar = ({
           return pages.map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
-                href={`/spaces?page=${page}`}
+                href={`/${paginationFor}?page=${page}`}
                 isActive={currentPage === page}
               >
                 {page}
@@ -68,7 +73,9 @@ const PaginationBar = ({
             pagination.hasNextPage ? '' : 'pointer-events-none opacity-50 '
           }
         >
-          <PaginationNext href={`/spaces?page=${pagination.page + 1}`} />
+          <PaginationNext
+            href={`/${paginationFor}?page=${pagination.page + 1}`}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

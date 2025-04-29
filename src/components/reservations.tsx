@@ -39,21 +39,19 @@ const ReservationsView = ({
 
   return (
     <>
-      <div className='flex flex-col justify-between sm:flex-row gap-4'>
+      <div className='flex justify-between gap-4'>
         <Button
-          variant='outline'
-          className={`w-20 h-8 ${isActive ? 'bg-black text-white' : ''}`}
+          variant={isActive ? 'default' : 'outline'}
+          className='cursor-pointer'
           onClick={() => setIsActive(!isActive)}
         >
           History
         </Button>
         <div className='flex gap-2'>
           <ReservationsFilter>
-            <div>
-              <Button variant='outline' size='icon'>
-                <Filter className='h-4 w-4' />
-              </Button>
-            </div>
+            <Button variant='outline' size='icon' className='cursor-pointer'>
+              <Filter className='size-4' />
+            </Button>
           </ReservationsFilter>
           <ReservationsLayoutSwitcher
             layout={layout}

@@ -23,7 +23,7 @@ const ReservationsLayoutSwitcher = ({
       <Button
         variant={layout === 'list' ? 'default' : 'outline'}
         size='icon'
-        className='rounded-r-none'
+        className='rounded-r-none cursor-pointer'
         onClick={() => updateLayout('list')}
       >
         <List className='h-4 w-4' />
@@ -31,7 +31,7 @@ const ReservationsLayoutSwitcher = ({
       <Button
         variant={layout === 'grid' ? 'default' : 'outline'}
         size='icon'
-        className='rounded-l-none'
+        className='rounded-l-none cursor-pointer'
         onClick={() => updateLayout('grid')}
       >
         <Grip className='h-4 w-4' />
