@@ -1,20 +1,15 @@
 'use client'
 
-import { useEditEventModal } from '@/context/event-status' 
-import AddEventEditForm from './edit-event-form'
-import { Space } from '@/interfaces/space.interface'
+import { useEditEventModal } from '@/context/event-status'
 
-const EditModalContainer = ({ spaces }: { spaces: Space[] }) => {
-  const { isEventModalOpen, editingEvent, closeEventModal } = useEditEventModal()
+import AddEventEditForm from './edit-event-form'
+
+const EditModalContainer = () => {
+  const { isEventModalOpen, editingEvent } = useEditEventModal()
 
   if (!isEventModalOpen || !editingEvent) return null
 
-  return (
-    <AddEventEditForm
-      event={editingEvent}
-      spaces={spaces}
-    />
-  )
+  return <AddEventEditForm event={editingEvent} />
 }
 
-export default EditModalContainer;
+export default EditModalContainer

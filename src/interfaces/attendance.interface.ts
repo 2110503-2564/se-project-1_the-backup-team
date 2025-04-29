@@ -7,8 +7,8 @@ export interface Attendance {
 }
 
 export interface AttendanceResponse {
-  createAt:string
-  _id:string
-  event:string
-  user:string
+  createAt: string
+  _id: string
+  event: string
+  user: string
 }

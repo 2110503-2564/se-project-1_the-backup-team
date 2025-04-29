@@ -1,5 +1,6 @@
 import {
-  Attendance,AttendanceResponse
+  Attendance,
+  AttendanceResponse,
 } from '@/interfaces/attendance.interface'
 import { APIResponse } from '@/interfaces/interface'
 import { sortParams } from '@/types/types'
@@ -62,14 +63,10 @@ export const deleteAttendance = (attendance: string, token: string) => {
   })
 }
 
-export const createAttendance = (
-  event:string,
-  token: string,
-) => {
+export const createAttendance = (event: string, token: string) => {
   return new Promise<APIResponse<AttendanceResponse>>(
     async (resolve, reject) => {
       try {
-
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/attendance/${event}`,
           {
@@ -96,7 +93,7 @@ export const createAttendance = (
   )
 }
 
-export const getAttendanceById = (token:string) => {
+export const getAttendanceById = (token: string) => {
   return new Promise<Attendance[]>(async (resolve, reject) => {
     try {
       const response = await fetch(
@@ -104,8 +101,8 @@ export const getAttendanceById = (token:string) => {
         {
           headers: {
             'Content-Type': 'application/json',
-             Authorization: `Bearer ${token}`,
-            },
+            Authorization: `Bearer ${token}`,
+          },
           cache: 'no-store',
         },
       )

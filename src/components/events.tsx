@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { format } from 'date-fns'
-import { Calendar, Clock, MapPin, Users } from 'lucide-react'
+import { Calendar, MapPin, Users } from 'lucide-react'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
@@ -15,17 +15,16 @@ import {
   CardFooter,
   CardTitle,
 } from '@/components/ui/card'
-
 import { Event } from '@/interfaces/event.interface'
-// import { Space } from '@/interfaces/space.interface'
-
 import { cn } from '@/lib/utils'
 
 import EventsActions from './Event-actions'
 import JoinEvents from './joined-events'
-import { fetchSpaces } from '@/repo/spaces'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth-options'
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = async({ event }: { event: Event }) => {
+  const session = await getServerSession(authOptions)
 
   return (
     <Card className='w-full rounded-lg overflow-hidden shadow-md pt-0 min-h-[25rem] md:min-h-[30rem]'>
@@ -33,7 +32,7 @@ const EventCard = ({ event }: { event: Event }) => {
         <AspectRatio ratio={16 / 9}>
           <Suspense fallback={<div className='bg-black size-full'></div>}>
             <Image
-              src={`/events${event.image}`}
+              src={`/events${event.image ?? '/placehold.jpg'}`}
               alt='Card Image'
               fill
               loading='eager'
@@ -51,7 +50,9 @@ const EventCard = ({ event }: { event: Event }) => {
             </CardTitle>
             <div className={cn('flex items-center gap-1 text-sm')}>
               <div className='text-black'>
-                <EventsActions event={event}></EventsActions>
+                {
+                  session?.user.role === 'admin' && <EventsActions event={event}></EventsActions>
+                }
               </div>
             </div>
           </div>
@@ -93,7 +94,7 @@ const EventCard = ({ event }: { event: Event }) => {
 
         <Button variant='outline' className='w-full mt-2 p-0'>
           <Link href={`/events/${event._id}`} className='w-full'>
-            view Details
+            View Details
           </Link>
         </Button>
       </CardFooter>
@@ -102,15 +103,13 @@ const EventCard = ({ event }: { event: Event }) => {
 }
 
 const EventsView = async ({ events }: { events: Event[] }) => {
-  const { spaces, pagination } = await fetchSpaces();
-
   return (
     <>
       <JoinEvents />
       <p className='text-xl sm:text-md font-semibold'>Other Events</p>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:grid-rows-2'>
         {events.map((event) => (
-          <EventCard key={event._id} event={event}/>
+          <EventCard key={event._id} event={event} />
         ))}
       </div>
     </>

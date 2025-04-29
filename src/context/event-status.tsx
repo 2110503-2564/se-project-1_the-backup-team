@@ -3,6 +3,7 @@
 'use client'
 
 import { createContext, useContext, useState } from 'react'
+
 import { Event } from '@/interfaces/event.interface'
 
 type EditEventModalContextType = {
@@ -12,9 +13,15 @@ type EditEventModalContextType = {
   closeEventModal: () => void
 }
 
-const EditEventModalContext = createContext<EditEventModalContextType | undefined>(undefined)
+const EditEventModalContext = createContext<
+  EditEventModalContextType | undefined
+>(undefined)
 
-export const EditEventModalProvider = ({ children }: { children: React.ReactNode }) => {
+export const EditEventModalProvider = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
   const [isEventModalOpen, setIsEventModalOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
 
@@ -45,7 +52,9 @@ export const EditEventModalProvider = ({ children }: { children: React.ReactNode
 export const useEditEventModal = () => {
   const context = useContext(EditEventModalContext)
   if (!context)
-    throw new Error('useEditEventModal must be used within EditEventModalProvider')
+    throw new Error(
+      'useEditEventModal must be used within EditEventModalProvider',
+    )
   return context
 }
 
