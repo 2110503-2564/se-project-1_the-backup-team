@@ -1,12 +1,10 @@
 import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 
+import AdminPanel from '@/components/admin-panel'
+import { AdminCursorProvider } from '@/context/admin-cursor'
 import { BookingProvider } from '@/context/booking-context'
 import { EditModalProvider } from '@/context/edited-status'
-import { AdminCursorProvider } from '@/context/admin-cursor'
-
-import AdminPanel from '@/components/admin-panel'
-
 import { authOptions } from '@/lib/auth-options'
 
 export const metadata: Metadata = {

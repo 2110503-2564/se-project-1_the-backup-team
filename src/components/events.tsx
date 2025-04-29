@@ -17,8 +17,9 @@ import {
 } from '@/components/ui/card'
 import { Event } from '@/interfaces/event.interface'
 import { cn } from '@/lib/utils'
-import JoinEvents from './joined-events'
+
 import EventsActions from './Event-actions'
+import JoinEvents from './joined-events'
 
 const EventCard = ({ event }: { event: Event }) => {
   return (

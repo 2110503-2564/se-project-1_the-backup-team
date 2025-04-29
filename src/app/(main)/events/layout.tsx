@@ -1,11 +1,15 @@
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth-options'
+import Link from 'next/link'
+
+import { Plus } from 'lucide-react'
 import { Metadata } from 'next'
-import { AdminCursorProvider } from '@/context/admin-cursor'
+import { getServerSession } from 'next-auth'
+
 import { PageActions, PageHeader, PageHeaderDescription, PageHeaderHeading } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { AdminCursorProvider } from '@/context/admin-cursor'
+import { authOptions } from '@/lib/auth-options'
+
+
 
 const title = 'Ongoing Events'
 const description = 'Discover current events and expand your knowledge. Browse our ongoing programs.'

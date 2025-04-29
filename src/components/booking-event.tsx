@@ -37,9 +37,9 @@ import { Event } from '@/interfaces/event.interface'
 import { Space, TimeSlots } from '@/interfaces/space.interface'
 import { cn } from '@/lib/utils'
 import { createAttendance, getAttendanceById } from "@/repo/attendance"
+import { getEventById } from '@/repo/events'
 import { createReservation } from '@/repo/reservations'
 import { getTimeslots } from '@/repo/spaces'
-import { getEventById } from '@/repo/events'
 
 const BookingEvent = ({ event }: { event: Event }) => {
   const router = useRouter()
