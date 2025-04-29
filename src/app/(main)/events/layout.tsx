@@ -5,11 +5,9 @@ import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 
 import { PageActions, PageHeader, PageHeaderDescription, PageHeaderHeading } from '@/components/page-header'
-import { Button } from '@/components/ui/button'
 import { AdminCursorProvider } from '@/context/admin-cursor'
 import { authOptions } from '@/lib/auth-options'
-
-
+import CreateEventPopup from '@/components/create-event-popup'
 
 const title = 'Ongoing Events'
 const description = 'Discover current events and expand your knowledge. Browse our ongoing programs.'
@@ -28,17 +26,13 @@ const EventsLayout = async ({ children }: { children: React.ReactNode }) => {
         <PageHeaderHeading>{title}</PageHeaderHeading>
         <PageHeaderDescription>{description}</PageHeaderDescription>
         <PageActions>
-          <Button asChild size='sm' className='rounded-md'>
-            <Link href=''>
-              <Plus className='size-4' />
-              Host New Event
-            </Link>
-          </Button>
+          {/* แสดง CreateEventPopup เฉพาะเมื่อ role เป็น admin */}
+          {session?.user.role === 'admin' && <CreateEventPopup />}
         </PageActions>
       </PageHeader>
-      <div className='container-wrapper'>
-        <div className='container py-6'>
-          <section id='events' className='scroll-mt-20'>
+      <div className="container-wrapper">
+        <div className="container py-6">
+          <section id="events" className="scroll-mt-20">
             {children}
           </section>
         </div>
