@@ -46,6 +46,42 @@ export const getEventById = (id: string) => {
   })
 }
 
+export const createEvent = (eventData: {
+  name: string
+  space: string
+  description: string
+  host: string
+  capacity: number
+  startDate: string
+  endDate: string
+  image: string
+}) => {
+  return new Promise<APIResponse<null>>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/events`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(eventData),
+          cache: 'no-store',
+        },
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to create event')
+      }
+
+      resolve({ success: true, data: null })
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error('Failed to create event'))
+    }
+  })
+}
+
 export const updateEvent = (
   id: string,
   event: Partial<Event>,
