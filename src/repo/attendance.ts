@@ -15,7 +15,7 @@ export const fetchAttendance = (
       queryParams.append('sort', sort)
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/attendance?${queryParams.toString()}`,
+        `${process.env.API_ENDPOINT}/api/v1/attendance?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {
@@ -41,7 +41,7 @@ export const deleteAttendance = (attendance: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/attendance/${attendance}`,
+        `${process.env.API_ENDPOINT}/api/v1/attendance/${attendance}`,
         {
           method: 'DELETE',
           headers: {
@@ -68,7 +68,7 @@ export const createAttendance = (event: string, token: string) => {
     async (resolve, reject) => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/attendance/${event}`,
+          `${process.env.API_ENDPOINT}/api/v1/events/attendance/${event}`,
           {
             method: 'POST',
             headers: {
@@ -97,7 +97,7 @@ export const getAttendanceById = (token: string) => {
   return new Promise<Attendance[]>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/attendance`,
+        `${process.env.API_ENDPOINT}/api/v1/events/attendance`,
         {
           headers: {
             'Content-Type': 'application/json',
