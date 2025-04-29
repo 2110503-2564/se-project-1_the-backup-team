@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 import { format } from 'date-fns'
 import { Calendar, Clock, MapPin, Users } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import {
@@ -15,10 +16,9 @@ import {
   CardFooter,
   CardTitle,
 } from '@/components/ui/card'
+import { Attendance } from '@/interfaces/attendance.interface'
 import { cn } from '@/lib/utils'
 import { getAttendanceById } from '@/repo/attendance'
-import { useSession } from 'next-auth/react'
-import { Attendance } from '@/interfaces/attendance.interface'
 
 const JoinEvents = () => {
   const { data: session } = useSession();

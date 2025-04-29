@@ -19,8 +19,9 @@ import {
 import { Event } from '@/interfaces/event.interface'
 
 import { cn } from '@/lib/utils'
-import JoinEvents from './joined-events'
+
 import EventsActions from './Event-actions'
+import JoinEvents from './joined-events'
 
 const EventCard = ({ event }: { event: Event }) => {
 
@@ -30,7 +31,7 @@ const EventCard = ({ event }: { event: Event }) => {
         <AspectRatio ratio={16 / 9}>
           <Suspense fallback={<div className='bg-black size-full'></div>}>
             <Image
-              src={`/events/${event.image}`}
+              src={`/events${event.image}`}
               alt='Card Image'
               fill
               loading='eager'
