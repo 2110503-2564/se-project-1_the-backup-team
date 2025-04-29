@@ -280,7 +280,6 @@ const AddEventEditForm = (
                         ref={field.ref}
                         className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
-                          <option value="">Select a Space</option>
                           {spaces.map((space) => (
                             <option key={space._id} value={space._id}>
                               {space.name}
