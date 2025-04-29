@@ -20,8 +20,12 @@ import { cn } from '@/lib/utils'
 
 import EventsActions from './Event-actions'
 import JoinEvents from './joined-events'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth-options'
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = async({ event }: { event: Event }) => {
+  const session = await getServerSession(authOptions)
+
   return (
     <Card className='w-full rounded-lg overflow-hidden shadow-md pt-0 min-h-[25rem] md:min-h-[30rem]'>
       <div className='relative bg-muted block'>
@@ -46,7 +50,9 @@ const EventCard = ({ event }: { event: Event }) => {
             </CardTitle>
             <div className={cn('flex items-center gap-1 text-sm')}>
               <div className='text-black'>
-                <EventsActions event={event}></EventsActions>
+                {
+                  session?.user.role === 'admin' && <EventsActions event={event}></EventsActions>
+                }
               </div>
             </div>
           </div>

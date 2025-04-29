@@ -18,15 +18,17 @@ import {
 import { useEditEventModal } from '@/context/event-status'
 import { Event } from '@/interfaces/event.interface'
 import { deleteEvent } from '@/repo/events'
+import { useSession } from 'next-auth/react'
 
 const EventsActions = ({ event }: { event: Event }) => {
+  const { data : session } = useSession()
   const router = useRouter()
   const { openEventModal } = useEditEventModal()
   const [showConfirm, setShowConfirm] = useState(false)
 
   const handleDelete = async () => {
     try {
-      const response = await deleteEvent(event._id)
+      const response = await deleteEvent(event._id, session?.accessToken || '')
 
       if (!response.success) {
         toast.error(response.message || 'Failed to delete this event')

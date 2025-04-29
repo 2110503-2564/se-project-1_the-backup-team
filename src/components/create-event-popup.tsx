@@ -39,8 +39,10 @@ import { Space } from '@/interfaces/space.interface'
 import { cn } from '@/lib/utils'
 import { createEvent } from '@/repo/events'
 import { fetchSpaces } from '@/repo/spaces'
+import { useSession } from 'next-auth/react'
 
 const CreateEventPopup = () => {
+  const { data: session } = useSession()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [formData, setFormData] = useState({
@@ -111,6 +113,7 @@ const CreateEventPopup = () => {
 
     setIsLoading(true)
     try {
+      
       await createEvent({
         name,
         space,
@@ -120,7 +123,7 @@ const CreateEventPopup = () => {
         startDate: date.from.toISOString(),
         endDate: date.to.toISOString(),
         image,
-      })
+      },session?.accessToken || '')
       toast.success('Event created successfully')
       setIsOpen(false)
       router.refresh()

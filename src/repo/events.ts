@@ -46,16 +46,19 @@ export const getEventById = (id: string) => {
   })
 }
 
-export const createEvent = (eventData: {
-  name: string
-  space: string
-  description: string
-  host: string
-  capacity: number
-  startDate: string
-  endDate: string
-  image: string
-}) => {
+export const createEvent = (
+  eventData: {
+    name: string
+    space: string
+    description: string
+    host: string
+    capacity: number
+    startDate: string
+    endDate: string
+    image: string
+  },
+  token: string,
+) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
@@ -64,6 +67,7 @@ export const createEvent = (eventData: {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(eventData),
           cache: 'no-store',
@@ -125,13 +129,17 @@ export const updateEvent = (
   })
 }
 
-export const deleteEvent = (id: string) => {
+export const deleteEvent = (id: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/${id}`,
         {
           method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+          },
           cache: 'no-store',
         },
       )
