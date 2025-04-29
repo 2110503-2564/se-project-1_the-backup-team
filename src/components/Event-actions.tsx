@@ -1,25 +1,25 @@
 'use client'
 import { MouseEvent, useEffect, useState } from 'react'
 
-import Link from 'next/link'
+// import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+// import { useSession } from 'next-auth/react'
 
-import { format } from 'date-fns'
+// import { format } from 'date-fns'
 import { CalendarIcon, Clock, Edit, Eye, MoreHorizontal, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+// import { Calendar } from '@/components/ui/calendar'
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,8 +53,6 @@ import AddEventEditForm from './edit-event-form'
 
 
 const EventsActions = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
-
-  //const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
   const { isEventModalOpen } = useEditEventModal()
   const { openEventModal } = useEditEventModal()
@@ -79,18 +77,6 @@ const EventsActions = ({ event, spaces }: { event: Event, spaces:Space[] }) => {
       toast.error('Something went wrong!')
     }
   }
-
-  // const handleUpdate = async (e: MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault()
-
-  //   try {
-
-  //     toast.success('Your event was successfully updated')
-  //     router.refresh()
-  //   } catch (e) {
-  //     toast.error('Something went wrong!')
-  //   }
-  // }
 
   return (
     <>
