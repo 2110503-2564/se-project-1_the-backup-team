@@ -26,7 +26,6 @@ const EventsLayout = async ({ children }: { children: React.ReactNode }) => {
         <PageHeaderHeading>{title}</PageHeaderHeading>
         <PageHeaderDescription>{description}</PageHeaderDescription>
         <PageActions>
-          {/* แสดง CreateEventPopup เฉพาะเมื่อ role เป็น admin */}
           {session?.user.role === 'admin' && <CreateEventPopup />}
         </PageActions>
       </PageHeader>

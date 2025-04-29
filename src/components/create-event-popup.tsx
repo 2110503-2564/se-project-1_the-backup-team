@@ -98,6 +98,7 @@ const CreateEventPopup = () => {
             placeholder="Event Description"
             value={formData.description}
             onChange={handleChange}
+            className="max-w-115 overflow-y-auto resize-x"
           />
           <Input
             name="host"
