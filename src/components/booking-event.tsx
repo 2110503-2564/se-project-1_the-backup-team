@@ -67,7 +67,7 @@ const BookingEvent = ({ event }: { event: Event }) => {
     if (!session?.accessToken) return;
     const result = await getAttendanceById(session?.accessToken!);
     for (const item of result) {
-      if (item.event._id == event._id) {
+      if (item.event?._id == event._id) {
         setIsJoined(true);
         break;
       }

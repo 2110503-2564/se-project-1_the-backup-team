@@ -117,7 +117,7 @@ const EventsActions = ({ event }: { event: Event }) => {
 
       {showConfirm && (
         <ConfirmBox
-          question='Are you sure you want to delete this review?'
+          question='Are you sure you want to delete this event?'
           confirmColor='bg-red-500'
           cancelColor='bg-gray-500'
           onConfirm={handleDelete}
