@@ -2,11 +2,13 @@ import { Event, EventsPagination } from '@/interfaces/event.interface'
 import { APIResponse } from '@/interfaces/interface'
 import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 
+const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
+
 export const fetchEvents = (page: number = 1, limit: number = 6) => {
   return new Promise<EventsPagination>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events?page=${page}&limit=${limit}`,
+        `${apiEndpoint}/api/v1/events?page=${page}&limit=${limit}`,
         { next: { revalidate: 0 } },
       )
 
@@ -26,12 +28,9 @@ export const fetchEvents = (page: number = 1, limit: number = 6) => {
 export const getEventById = (id: string) => {
   return new Promise<Event>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/${id}`,
-        {
-          cache: 'no-store',
-        },
-      )
+      const response = await fetch(`${apiEndpoint}/api/v1/events/${id}`, {
+        cache: 'no-store',
+      })
 
       if (!response.ok) {
         const error = await response.json()
@@ -62,18 +61,15 @@ export const createEvent = (
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(eventData),
-          cache: 'no-store',
+      const response = await fetch(`${apiEndpoint}/api/v1/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      )
+        body: JSON.stringify(eventData),
+        cache: 'no-store',
+      })
 
       if (!response.ok) {
         const error = await response.json()
@@ -94,18 +90,15 @@ export const updateEvent = (
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(event),
-          cache: 'no-store',
+      const response = await fetch(`${apiEndpoint}/api/v1/events/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      )
+        body: JSON.stringify(event),
+        cache: 'no-store',
+      })
 
       if (!response.ok) {
         const error = await response.json()
@@ -122,17 +115,14 @@ export const updateEvent = (
 export const deleteEvent = (id: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/${id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          cache: 'no-store',
+      const response = await fetch(`${apiEndpoint}/api/v1/events/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      )
+        cache: 'no-store',
+      })
 
       if (!response.ok) {
         const error = await response.json()

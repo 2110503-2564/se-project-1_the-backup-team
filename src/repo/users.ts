@@ -1,19 +1,18 @@
 import { User, UserAuthResponse, UserRole } from '@/interfaces/user.interface'
 import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 
+const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
+
 export const authenticateUser = (email: string, password: string) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/auth/login`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
+      const response = await fetch(`${apiEndpoint}/api/v1/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify({ email, password }),
+      })
 
       if (!response.ok) {
         const error = await response.json()
@@ -49,17 +48,14 @@ export const updateUserProfile = (
 ) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/users/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(updates),
+      const response = await fetch(`${apiEndpoint}/api/v1/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      )
+        body: JSON.stringify(updates),
+      })
 
       if (!response.ok) {
         const error = await response.json()
@@ -89,16 +85,13 @@ export const updateUserProfile = (
 export const registerUser = (user: Omit<User, '_id'>) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/auth/register`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ...user }),
+      const response = await fetch(`${apiEndpoint}/api/v1/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify({ ...user }),
+      })
       if (!response.ok) throw new Error('Cannot register')
       const body = await response.json()
       resolve(body)

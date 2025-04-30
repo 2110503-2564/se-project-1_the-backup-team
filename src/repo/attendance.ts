@@ -6,6 +6,8 @@ import { APIResponse } from '@/interfaces/interface'
 import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 import { sortParams } from '@/types/types'
 
+const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
+
 export const fetchAttendance = (
   token: string,
   sort: sortParams = 'date-desc',
@@ -16,7 +18,7 @@ export const fetchAttendance = (
       queryParams.append('sort', sort)
 
       const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/attendance?${queryParams.toString()}`,
+        `${apiEndpoint}/api/v1/attendance?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {
@@ -42,7 +44,7 @@ export const deleteAttendance = (attendance: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/attendance/${attendance}`,
+        `${apiEndpoint}/api/v1/attendance/${attendance}`,
         {
           method: 'DELETE',
           headers: {
@@ -69,7 +71,7 @@ export const createAttendance = (event: string, token: string) => {
     async (resolve, reject) => {
       try {
         const response = await fetch(
-          `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/attendance/${event}`,
+          `${apiEndpoint}/api/v1/events/attendance/${event}`,
           {
             method: 'POST',
             headers: {
@@ -97,16 +99,13 @@ export const createAttendance = (event: string, token: string) => {
 export const getAttendanceById = (token: string) => {
   return new Promise<Attendance[]>(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/attendance`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          cache: 'no-store',
+      const response = await fetch(`${apiEndpoint}/api/v1/events/attendance`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      )
+        cache: 'no-store',
+      })
 
       if (!response.ok) {
         const error = await response.json()

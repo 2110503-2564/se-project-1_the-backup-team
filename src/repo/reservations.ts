@@ -6,6 +6,8 @@ import {
 import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 import { sortParams } from '@/types/types'
 
+const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
+
 export const fetchReservations = (
   token: string,
   sort: sortParams = 'date-desc',
@@ -16,7 +18,7 @@ export const fetchReservations = (
       queryParams.append('sort', sort)
 
       const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations?${queryParams.toString()}`,
+        `${apiEndpoint}/api/v1/reservations?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {
@@ -42,7 +44,7 @@ export const deleteReservation = (reservation: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations/${reservation}`,
+        `${apiEndpoint}/api/v1/reservations/${reservation}`,
         {
           method: 'DELETE',
           headers: {
@@ -82,7 +84,7 @@ export const createReservation = (
         date.setMinutes(minutes)
 
         const response = await fetch(
-          `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${space}/reservations`,
+          `${apiEndpoint}/api/v1/spaces/${space}/reservations`,
           {
             method: 'POST',
             headers: {
@@ -128,7 +130,7 @@ export const updateReservation = (
         date.setMinutes(minutes)
 
         const response = await fetch(
-          `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations/${reservation_id}`,
+          `${apiEndpoint}/api/v1/reservations/${reservation_id}`,
           {
             method: 'PUT',
             headers: {
