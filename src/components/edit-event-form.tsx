@@ -349,8 +349,8 @@ const AddEventEditForm = ({ event }: { event: Event }) => {
                       <FormControl>
                         <div className='rounded-md basis-1/2'>
                           <Select
-                            value={field.value._id || ''}
                             onValueChange={field.onChange}
+                            defaultValue={field.value._id}
                             required
                           >
                             <SelectTrigger className='w-full cursor-pointer'>

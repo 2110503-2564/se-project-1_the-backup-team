@@ -1,11 +1,12 @@
 import { Event, EventsPagination } from '@/interfaces/event.interface'
 import { APIResponse } from '@/interfaces/interface'
+import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 
 export const fetchEvents = (page: number = 1, limit: number = 6) => {
   return new Promise<EventsPagination>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/events?page=${page}&limit=${limit}`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events?page=${page}&limit=${limit}`,
         { next: { revalidate: 0 } },
       )
 
@@ -26,7 +27,7 @@ export const getEventById = (id: string) => {
   return new Promise<Event>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/events/${id}`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/${id}`,
         {
           cache: 'no-store',
         },
@@ -62,7 +63,7 @@ export const createEvent = (
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/events`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events`,
         {
           method: 'POST',
           headers: {
@@ -90,22 +91,11 @@ export const updateEvent = (
   id: string,
   event: Partial<Event>,
   token: string,
-  // name: string,
-  // image: string,
-  // description: string,
-  // space: {
-  //   id: string,
-  //   name: string
-  // },
-  // host: string,
-  // capacity: number,
-  // startDate: string,
-  // endDate: string
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/events/${id}`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/${id}`,
         {
           method: 'PUT',
           headers: {
@@ -133,7 +123,7 @@ export const deleteEvent = (id: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/events/${id}`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/${id}`,
         {
           method: 'DELETE',
           headers: {

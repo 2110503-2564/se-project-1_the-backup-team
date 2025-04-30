@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation'
 
 import { format } from 'date-fns'
 import { Box, CalendarIcon, Clock } from 'lucide-react'
+
+import { Plus } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import { DateRange } from 'react-day-picker'
 import { toast } from 'sonner'
-import { Plus } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -39,7 +41,6 @@ import { Space } from '@/interfaces/space.interface'
 import { cn } from '@/lib/utils'
 import { createEvent } from '@/repo/events'
 import { fetchSpaces } from '@/repo/spaces'
-import { useSession } from 'next-auth/react'
 
 const CreateEventPopup = () => {
   const { data: session } = useSession()
@@ -113,17 +114,19 @@ const CreateEventPopup = () => {
 
     setIsLoading(true)
     try {
-      
-      await createEvent({
-        name,
-        space,
-        description,
-        host,
-        capacity: parseInt(capacity),
-        startDate: date.from.toISOString(),
-        endDate: date.to.toISOString(),
-        image,
-      },session?.accessToken || '')
+      await createEvent(
+        {
+          name,
+          space,
+          description,
+          host,
+          capacity: parseInt(capacity),
+          startDate: date.from.toISOString(),
+          endDate: date.to.toISOString(),
+          image,
+        },
+        session?.accessToken || '',
+      )
       toast.success('Event created successfully')
       setIsOpen(false)
       router.refresh()
@@ -162,8 +165,8 @@ const CreateEventPopup = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="rounded-md">
-          <Plus className="mr-2" />
+        <Button size='sm' className='rounded-md'>
+          <Plus className='mr-2' />
           Host New Event
         </Button>
       </DialogTrigger>

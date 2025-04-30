@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Edit, MoreHorizontal, X } from 'lucide-react'
+
+import { useSession } from 'next-auth/react'
+
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -18,10 +21,9 @@ import {
 import { useEditEventModal } from '@/context/event-status'
 import { Event } from '@/interfaces/event.interface'
 import { deleteEvent } from '@/repo/events'
-import { useSession } from 'next-auth/react'
 
 const EventsActions = ({ event }: { event: Event }) => {
-  const { data : session } = useSession()
+  const { data: session } = useSession()
   const router = useRouter()
   const { openEventModal } = useEditEventModal()
   const [showConfirm, setShowConfirm] = useState(false)
