@@ -1,14 +1,11 @@
 import { User, UserAuthResponse, UserRole } from '@/interfaces/user.interface'
-
-/*  currently using mockup data
- *  TODO: Implement Backend API Usage
- */
+import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 
 export const authenticateUser = (email: string, password: string) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/auth/login`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/auth/login`,
         {
           method: 'POST',
           headers: {
@@ -53,7 +50,7 @@ export const updateUserProfile = (
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/users/${id}`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/users/${id}`,
         {
           method: 'PUT',
           headers: {
@@ -93,7 +90,7 @@ export const registerUser = (user: Omit<User, '_id'>) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/auth/register`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/auth/register`,
         {
           method: 'POST',
           headers: {

@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { format } from 'date-fns'
 import { Calendar, MapPin, Users } from 'lucide-react'
+import { getServerSession } from 'next-auth'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
@@ -16,14 +17,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Event } from '@/interfaces/event.interface'
+import { authOptions } from '@/lib/auth-options'
 import { cn } from '@/lib/utils'
 
 import EventsActions from './Event-actions'
 import JoinEvents from './joined-events'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth-options'
 
-const EventCard = async({ event }: { event: Event }) => {
+const EventCard = async ({ event }: { event: Event }) => {
   const session = await getServerSession(authOptions)
 
   return (
@@ -50,9 +50,9 @@ const EventCard = async({ event }: { event: Event }) => {
             </CardTitle>
             <div className={cn('flex items-center gap-1 text-sm')}>
               <div className='text-black'>
-                {
-                  session?.user.role === 'admin' && <EventsActions event={event}></EventsActions>
-                }
+                {session?.user.role === 'admin' && (
+                  <EventsActions event={event}></EventsActions>
+                )}
               </div>
             </div>
           </div>

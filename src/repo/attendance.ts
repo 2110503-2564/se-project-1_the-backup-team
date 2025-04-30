@@ -3,6 +3,7 @@ import {
   AttendanceResponse,
 } from '@/interfaces/attendance.interface'
 import { APIResponse } from '@/interfaces/interface'
+import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 import { sortParams } from '@/types/types'
 
 export const fetchAttendance = (
@@ -15,7 +16,7 @@ export const fetchAttendance = (
       queryParams.append('sort', sort)
 
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/attendance?${queryParams.toString()}`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/attendance?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {
@@ -41,7 +42,7 @@ export const deleteAttendance = (attendance: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/attendance/${attendance}`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/attendance/${attendance}`,
         {
           method: 'DELETE',
           headers: {
@@ -68,7 +69,7 @@ export const createAttendance = (event: string, token: string) => {
     async (resolve, reject) => {
       try {
         const response = await fetch(
-          `${process.env.API_ENDPOINT}/api/v1/events/attendance/${event}`,
+          `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/attendance/${event}`,
           {
             method: 'POST',
             headers: {
@@ -97,7 +98,7 @@ export const getAttendanceById = (token: string) => {
   return new Promise<Attendance[]>(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `${process.env.API_ENDPOINT}/api/v1/events/attendance`,
+        `${NEXT_PUBLIC_API_ENDPOINT}/api/v1/events/attendance`,
         {
           headers: {
             'Content-Type': 'application/json',

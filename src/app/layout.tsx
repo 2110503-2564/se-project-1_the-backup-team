@@ -1,6 +1,7 @@
 import './globals.css'
 import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
+import { PublicEnvScript } from 'next-runtime-env'
 import { Toaster } from 'sonner'
 
 import { AuthProvider } from '@/context/auth-context'
@@ -47,6 +48,9 @@ export default async function RootLayout({
   const authSession = await getServerSession(authOptions)
   return (
     <html lang='en' suppressHydrationWarning>
+      <head>
+        <PublicEnvScript />
+      </head>
       <body
         className={cn(
           'min-h-svh bg-background font-sans antialiased',
