@@ -9,6 +9,10 @@ const nextConfig = {
     ],
   },
   output: 'standalone',
+  env: {
+    API_ENDPOINT:
+      process.env.API_ENDPOINT || 'https://api.spaceflow.captainistz.me',
+  },
 }
 
 export default nextConfig

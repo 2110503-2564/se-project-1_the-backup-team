@@ -91,17 +91,6 @@ export const updateEvent = (
   id: string,
   event: Partial<Event>,
   token: string,
-  // name: string,
-  // image: string,
-  // description: string,
-  // space: {
-  //   id: string,
-  //   name: string
-  // },
-  // host: string,
-  // capacity: number,
-  // startDate: string,
-  // endDate: string
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
