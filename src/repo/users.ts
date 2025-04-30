@@ -1,11 +1,11 @@
-import { User, UserAuthResponse, UserRole } from '@/interfaces/user.interface'
-import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
+import { env } from 'next-runtime-env'
 
-const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
+import { User, UserAuthResponse, UserRole } from '@/interfaces/user.interface'
 
 export const authenticateUser = (email: string, password: string) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(`${apiEndpoint}/api/v1/auth/login`, {
         method: 'POST',
         headers: {
@@ -48,6 +48,7 @@ export const updateUserProfile = (
 ) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(`${apiEndpoint}/api/v1/users/${id}`, {
         method: 'PUT',
         headers: {
@@ -85,6 +86,7 @@ export const updateUserProfile = (
 export const registerUser = (user: Omit<User, '_id'>) => {
   return new Promise<UserAuthResponse>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(`${apiEndpoint}/api/v1/auth/register`, {
         method: 'POST',
         headers: {

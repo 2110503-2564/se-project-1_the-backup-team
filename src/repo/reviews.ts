@@ -1,8 +1,7 @@
+import { env } from 'next-runtime-env'
+
 import { APIResponse } from '@/interfaces/interface'
 import { Review } from '@/interfaces/review.interface'
-import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
-
-const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
 
 export const createReview = (
   space: string,
@@ -12,6 +11,7 @@ export const createReview = (
 ) => {
   return new Promise<APIResponse<Review>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${space}/reviews`,
         {
@@ -41,6 +41,7 @@ export const createReview = (
 export const getReviews = (space: string) => {
   return new Promise<APIResponse<Review[]>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${space}/reviews`,
         {
@@ -70,6 +71,7 @@ export const updateReview = (
 ) => {
   return new Promise<APIResponse<Review>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${spaceId}/reviews/${reviewId}`,
         {
@@ -103,6 +105,7 @@ export const deleteReview = (
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${spaceId}/reviews/${reviewId}`,
         {
@@ -134,6 +137,7 @@ export const upvoteReview = (
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${spaceId}/reviews/${reviewId}/upvote`,
         {
@@ -165,6 +169,7 @@ export const downvoteReview = (
 ) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${spaceId}/reviews/${reviewId}/downvote`,
         {

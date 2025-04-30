@@ -1,12 +1,11 @@
+import { env } from 'next-runtime-env'
+
 import { APIResponse } from '@/interfaces/interface'
 import {
   Reservation,
   ReservationResponse,
 } from '@/interfaces/reservation.interface'
-import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 import { sortParams } from '@/types/types'
-
-const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
 
 export const fetchReservations = (
   token: string,
@@ -16,7 +15,7 @@ export const fetchReservations = (
     try {
       const queryParams = new URLSearchParams()
       queryParams.append('sort', sort)
-
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/reservations?${queryParams.toString()}`,
         {
@@ -43,6 +42,7 @@ export const fetchReservations = (
 export const deleteReservation = (reservation: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/reservations/${reservation}`,
         {
@@ -82,6 +82,8 @@ export const createReservation = (
         date = new Date(date)
         date.setHours(hours)
         date.setMinutes(minutes)
+
+        const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
 
         const response = await fetch(
           `${apiEndpoint}/api/v1/spaces/${space}/reservations`,
@@ -128,6 +130,8 @@ export const updateReservation = (
         date = new Date(date)
         date.setHours(hours)
         date.setMinutes(minutes)
+
+        const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
 
         const response = await fetch(
           `${apiEndpoint}/api/v1/reservations/${reservation_id}`,

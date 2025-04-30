@@ -1,12 +1,11 @@
+import { env } from 'next-runtime-env'
+
 import {
   Attendance,
   AttendanceResponse,
 } from '@/interfaces/attendance.interface'
 import { APIResponse } from '@/interfaces/interface'
-import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
 import { sortParams } from '@/types/types'
-
-const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
 
 export const fetchAttendance = (
   token: string,
@@ -16,7 +15,7 @@ export const fetchAttendance = (
     try {
       const queryParams = new URLSearchParams()
       queryParams.append('sort', sort)
-
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/attendance?${queryParams.toString()}`,
         {
@@ -43,6 +42,7 @@ export const fetchAttendance = (
 export const deleteAttendance = (attendance: string, token: string) => {
   return new Promise<APIResponse<null>>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/attendance/${attendance}`,
         {
@@ -70,6 +70,7 @@ export const createAttendance = (event: string, token: string) => {
   return new Promise<APIResponse<AttendanceResponse>>(
     async (resolve, reject) => {
       try {
+        const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
         const response = await fetch(
           `${apiEndpoint}/api/v1/events/attendance/${event}`,
           {
@@ -99,6 +100,7 @@ export const createAttendance = (event: string, token: string) => {
 export const getAttendanceById = (token: string) => {
   return new Promise<Attendance[]>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(`${apiEndpoint}/api/v1/events/attendance`, {
         headers: {
           'Content-Type': 'application/json',

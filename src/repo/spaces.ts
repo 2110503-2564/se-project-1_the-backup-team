@@ -1,16 +1,16 @@
+import { env } from 'next-runtime-env'
+
 import {
   Room,
   Space,
   SpacesPagination,
   TimeSlots,
 } from '@/interfaces/space.interface'
-import { NEXT_PUBLIC_API_ENDPOINT } from '@/lib/constant'
-
-const apiEndpoint = process.env.API_ENDPOINT || NEXT_PUBLIC_API_ENDPOINT
 
 export const fetchSpaces = (page: number = 1, limit: number = 6) => {
   return new Promise<SpacesPagination>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces?page=${page}&limit=${limit}`,
         { next: { revalidate: 300 } },
@@ -32,6 +32,7 @@ export const fetchSpaces = (page: number = 1, limit: number = 6) => {
 export const getSpaceById = (id: string) => {
   return new Promise<Space>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(`${apiEndpoint}/api/v1/spaces/${id}`, {
         cache: 'no-store',
       })
@@ -53,6 +54,7 @@ export const getSpaceById = (id: string) => {
 export const getTimeslots = (spaceId: string, roomId: string, date: string) => {
   return new Promise<TimeSlots[]>(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${spaceId}/rooms/${roomId}/reservations/timeslots?date=${date}`,
         { cache: 'no-store' },
@@ -80,6 +82,7 @@ export const addRoom = (
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(
         `${apiEndpoint}/api/v1/spaces/${space_id}/rooms`,
         {
@@ -107,6 +110,7 @@ export const addSpace = (space: Partial<Space>, token: string) => {
   return new Promise(async (resolve, reject) => {
     try {
       space.rooms = []
+      const apiEndpoint = env('NEXT_PUBLIC_API_ENDPOINT')
       const response = await fetch(`${apiEndpoint}/api/v1/spaces/`, {
         method: 'POST',
         headers: {
